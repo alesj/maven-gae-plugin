@@ -16,11 +16,11 @@ import org.apache.maven.plugin.MojoFailureException;
 /**
  * @author jpeynado@kindleit.net
  * Goal for run a WAR project on the GAE dev server.
- * @goal run
+ * @goal start
  */
 
 
-public class GoalRun extends AbstractMojo {
+public class StartGoal extends AbstractMojo {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
 
