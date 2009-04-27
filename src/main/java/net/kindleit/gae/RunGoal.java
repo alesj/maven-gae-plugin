@@ -9,7 +9,6 @@
  */
 package net.kindleit.gae;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
@@ -26,7 +25,7 @@ import com.google.appengine.tools.admin.AppCfg;
  * @execute phase="test-compile"
  *
  */
-public class RunGoal extends AbstractMojo {
+public class RunGoal extends EngineGoalBase {
 
   /**
    * The Maven project reference.

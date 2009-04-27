@@ -9,7 +9,6 @@
  */
 package net.kindleit.gae;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -20,7 +19,7 @@ import org.apache.maven.plugin.MojoFailureException;
  */
 
 
-public class EnhanceGoal extends AbstractMojo {
+public class EnhanceGoal extends EngineGoalBase {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
 

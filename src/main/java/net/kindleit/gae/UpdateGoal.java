@@ -9,37 +9,28 @@
  */
 package net.kindleit.gae;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 import com.google.appengine.tools.admin.AppCfg;
 
 /**
- * @author jpeynado@kindleit.net
  * Goal for run a WAR project on the GAE dev server.
+ *
+ * @author jpeynado@kindleit.net
+ * @author rhansen@kindleit.net
+ *
  * @goal update
  * @execute phase=package
+ *
  */
-public class UpdateGoal extends AbstractMojo {
-
-  /**
-   * @parameter expression="${project.build.directory}/${project.build.finalName}"
-   * @required
-   */
-  public String appDir;
-
-  /**
-   * @parameter expression="${appengine.sdk.root}"
-   * @required
-   */
-  public String sdkDir;
+public class UpdateGoal extends EngineGoalBase {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
 
     getLog().info("Updating Google App Engine Server...");
 
-    System.setProperty("appengine.sdk.root", sdkDir);
+    System.setProperty("appengine.sdk.root", sdkDirectory);
 
     final String[] args = {"--disable_prompt", "update", appDir};
     AppCfg.main(args);

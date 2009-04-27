@@ -9,7 +9,6 @@
  */
 package net.kindleit.gae;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -18,7 +17,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * Goal for run a WAR project on the GAE dev server.
  * @goal stop
  */
-public class StopGoal extends AbstractMojo {
+public class StopGoal extends EngineGoalBase {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
 
