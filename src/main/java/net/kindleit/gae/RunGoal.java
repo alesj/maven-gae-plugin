@@ -11,7 +11,6 @@ package net.kindleit.gae;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
 
 import com.google.appengine.tools.admin.AppCfg;
 
@@ -26,15 +25,6 @@ import com.google.appengine.tools.admin.AppCfg;
  *
  */
 public class RunGoal extends EngineGoalBase {
-
-  /**
-   * The Maven project reference.
-   *
-   * @parameter expression="${project}"
-   * @required
-   * @readonly
-   */
-  protected MavenProject project;
 
   public void execute() throws MojoExecutionException, MojoFailureException {
     final String[] args = new String[6];

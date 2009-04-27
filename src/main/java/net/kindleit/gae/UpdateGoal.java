@@ -9,6 +9,8 @@
  */
 package net.kindleit.gae;
 
+import java.util.List;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -17,7 +19,6 @@ import com.google.appengine.tools.admin.AppCfg;
 /**
  * Goal for run a WAR project on the GAE dev server.
  *
- * @author jpeynado@kindleit.net
  * @author rhansen@kindleit.net
  *
  * @goal update
@@ -30,10 +31,12 @@ public class UpdateGoal extends EngineGoalBase {
 
     getLog().info("Updating Google App Engine Server...");
 
-    System.setProperty("appengine.sdk.root", sdkDirectory);
+    final List<String> args = getCommonArgs();
+    args.add("update");
+    args.add(appDir);
 
-    final String[] args = {"--disable_prompt", "update", appDir};
-    AppCfg.main(args);
+    AppCfg.main(args.toArray(new String[0]));
+
   }
 }
 
