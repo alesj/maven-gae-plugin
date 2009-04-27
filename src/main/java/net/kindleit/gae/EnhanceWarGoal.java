@@ -12,22 +12,18 @@ package net.kindleit.gae;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-/**
- * Goal to upload a WAR project on Googles servers.
+/** Goal to .
  *
  * @author rhansen@kindleit.net
  *
- * @goal update
- * @execute phase=package
+ * @goal enhance
  */
-public class UpdateGoal extends EngineGoalBase {
+public class EnhanceWarGoal extends EngineGoalBase {
 
-  /** Create or update an app version.
-   * This goal uploads your web application to the google app engine server.
-   */
   public void execute() throws MojoExecutionException, MojoFailureException {
-    getLog().info("Updating Google App Engine Server...");
-    runAppCFG("update", appDir);
+
+    getLog().info("Running Google App Engine Server...");
+    //AppCfg.main();
   }
 }
 

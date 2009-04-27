@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
+
+import com.google.appengine.repackaged.com.google.common.collect.Lists;
+import com.google.appengine.tools.KickStart;
+import com.google.appengine.tools.admin.AppCfg;
 
 /** Base MOJO class for working with the Google App Engine SDK.
  *
@@ -14,11 +19,19 @@ public abstract class EngineGoalBase extends AbstractMojo {
 
   /** The Maven project reference.
    *
-   * @parameter expression="${settings}"
+   * @parameter expression="${project}"
    * @required
    * @readonly
    */
-  protected Settings settings;
+  protected MavenProject project;
+
+  /** The Maven settings reference.
+  *
+  * @parameter expression="${settings}"
+  * @required
+  * @readonly
+  */
+ protected Settings settings;
 
   /** Overrides where the Project War Directory is located.
    *
@@ -70,12 +83,40 @@ public abstract class EngineGoalBase extends AbstractMojo {
    */
   protected boolean passIn;
 
+  /** Passes command to the Google App Engine AppCfg runner.
+  *
+  * @param command command to run through AppCfg
+  * @param commandArguments arguments to the AppCfg command.
+  */
+  protected final void runAppCFG(final String command,
+      final String ... commandArguments) {
+
+    final List<String> args = getCommonArgs();
+    args.addAll(Lists.asList(command, commandArguments));
+
+    AppCfg.main(args.toArray(new String[0]));
+  }
+
+  /** Passes command to the Google App Engine KickStart runner.
+   *
+   * @param command command to run through KickStart
+   * @param commandArguments arguments to the KickStart command.
+   */
+  protected final void runKickStart(final String command,
+      final String ... commandArguments) {
+
+    final List<String> args = getCommonArgs();
+    args.addAll(Lists.asList(command, commandArguments));
+
+    KickStart.main(args.toArray(new String[0]));
+  }
+
   /** Generate all common Google AppEngine Task Parameters for use in all the
    * goals.
    *
    * @return List of arguments to add.
    */
-  protected final List<String> getCommonArgs () {
+  private final List<String> getCommonArgs () {
     final List<String> args = new ArrayList<String>(6);
 
     args.add("--sdk_root=" + sdkDirectory);
