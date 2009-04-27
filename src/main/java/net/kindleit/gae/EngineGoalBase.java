@@ -105,8 +105,8 @@ public abstract class EngineGoalBase extends AbstractMojo {
   protected final void runKickStart(final String command,
       final String ... commandArguments) {
 
-    final List<String> args = getCommonArgs();
-    args.addAll(Lists.asList(command, commandArguments));
+    final List<String> args = Lists.asList(command, commandArguments);
+    //args.addAll(getCommonArgs()); <- ant-macros.xml only specify 3 args.
 
     KickStart.main(args.toArray(new String[0]));
   }

@@ -12,25 +12,34 @@ package net.kindleit.gae;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import com.google.appengine.tools.admin.AppCfg;
-
 /**
  * @author jpeynado@kindleit.net
- * @author rhansen@kindleit.net
- * Goal for run a WAR project on the GAE dev server.
- *
+ * @author rhansen@kindleit.net Goal for run a WAR project on the GAE dev
+ *         server.
  * @goal run
  * @requiresDependencyResolution runtime
  * @execute phase="test-compile"
- *
  */
 public class RunGoal extends EngineGoalBase {
+  /**
+   * @parameter expression="${port}"
+   * @required
+   */
+  private String port;
+  /**
+   * @parameter expression="${address}"
+   * @required
+   */
+  private String address;
+  /**
+   * @parameter expression="${war}"
+   */
+  private String war;
 
   public void execute() throws MojoExecutionException, MojoFailureException {
-    final String[] args = new String[6];
-    AppCfg.main(args);
+
+    runKickStart("com.google.appengine.tools.KickStart", port + "," + address
+        + "," + war);
   }
 
 }
-
-
