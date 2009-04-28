@@ -16,7 +16,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author jpeynado@kindleit.net
  * Goal for run a WAR project on the GAE dev server.
  *
- * @goal undate-indexes
+ * @goal update-indexes
  * @executionStrategy once-per-session
  * @requiresOnline
  *
