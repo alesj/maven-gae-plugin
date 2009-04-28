@@ -10,6 +10,7 @@
 package net.kindleit.gae;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -31,7 +32,6 @@ public class EnhanceGoal extends EngineGoalBase {
 
   /** Fileset to augment.
    * @parameter
-   * @required
    */
   protected List<String> includes;
 
@@ -40,14 +40,38 @@ public class EnhanceGoal extends EngineGoalBase {
    */
   protected List<String> excludes;
 
+  /**
+   * @parameter expression="${project.build.outputDirectory}"
+   */
+  protected File enhanceFolder;
+
   public void execute() throws MojoExecutionException, MojoFailureException {
 
-    getLog().info("Running Google App Engine Server...");
+    getLog().info("Enhancing DataNucleus Clases...");
 
     final FileSet fs = new FileSet();
-    fs.setDir(new File(project.getBuild().getDirectory()));
+    fs.setDir(enhanceFolder);
+    addExcludes(fs);
+    addIncludes(fs);
 
+    final EnhancerTask ehTask = new EnhancerTask();
+    ehTask.addFileSet(fs);
+    ehTask.setEnhancerName("enhance");
+    ehTask.execute();
+  }
+
+
+
+  private void addIncludes(final FileSet fs) {
     final AndSelector fsIncludes = new AndSelector();
+
+    if (includes == null) {
+      includes = new ArrayList<String>(1);
+    }
+
+    if (includes.size() == 0) {
+      includes.add("**/*");
+    }
 
     for (final String inc : includes) {
       final FilenameSelector fns = new FilenameSelector();
@@ -55,21 +79,21 @@ public class EnhanceGoal extends EngineGoalBase {
       fsIncludes.add(fns);
     }
 
-    final NotSelector fsExcludes = new NotSelector();
-
-    for (final String exc : excludes) {
-      final FilenameSelector fns = new FilenameSelector();
-      fns.setName(exc);
-      fsExcludes.add(fns);
-    }
-
-    fs.addNot(fsExcludes);
     fs.addAnd(fsIncludes);
+  }
 
-    final EnhancerTask ehTask = new EnhancerTask();
-    ehTask.addFileSet(fs);
-    ehTask.setEnhancerName("enhance");
-    ehTask.execute();
+  private void addExcludes(final FileSet fs) {
+    if (excludes != null ) {
+      final NotSelector fsExcludes = new NotSelector();
+
+      for (final String exc : excludes) {
+        final FilenameSelector fns = new FilenameSelector();
+        fns.setName(exc);
+        fsExcludes.add(fns);
+      }
+
+      fs.addNot(fsExcludes);
+    }
   }
 }
 

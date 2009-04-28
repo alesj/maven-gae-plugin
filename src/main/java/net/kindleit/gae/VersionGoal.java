@@ -12,20 +12,19 @@ package net.kindleit.gae;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-/**
- * @author jpeynado@kindleit.net
- * Goal for run a WAR project on the GAE dev server.
- * @goal start
+/** Output plugin and sdk version information.
+ *
+ * @author rhansen@kindleit.net
+ *
+ * @goal version
  */
-
-
-public class StartGoal extends EngineGoalBase {
+public class VersionGoal extends EngineGoalBase {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
-
-    getLog().info("Running Google App Engine Server...");
-    //AppCfg.main();
+    getLog().info("maven-gae-plugin version: " + PLUGIN_VERSION);
+    runAppCfg("version");
   }
+
 }
 
 

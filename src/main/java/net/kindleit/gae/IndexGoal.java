@@ -15,14 +15,17 @@ import org.apache.maven.plugin.MojoFailureException;
 /**
  * @author jpeynado@kindleit.net
  * Goal for run a WAR project on the GAE dev server.
- * @goal stop
+ *
+ * @goal undate-indexes
+ * @executionStrategy once-per-session
+ * @requiresOnline
+ *
  */
-public class StopGoal extends EngineGoalBase {
+public class IndexGoal extends EngineGoalBase {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
-
-    getLog().info("Running Google App Engine Server...");
-    //AppCfg.main();
+    getLog().info("Updating Project Indexes...");
+    runAppCfg("update_indexes", appDir);
   }
 }
 

@@ -21,25 +21,36 @@ import org.apache.maven.plugin.MojoFailureException;
  * @execute phase="test-compile"
  */
 public class RunGoal extends EngineGoalBase {
-  /**
-   * @parameter expression="${port}"
-   * @required
+
+  /** Port to run in.
+   *
+   * @parameter expression="${gae.port}" default-value="8080"
    */
   private String port;
-  /**
-   * @parameter expression="${address}"
-   * @required
+
+  /** Address to bind to.
+   *
+   * @parameter expression="${gae.address}" default-value="0.0.0.0"
    */
   private String address;
-  /**
-   * @parameter expression="${war}"
-   */
-  private String war;
+
+  /** Do not check for new SDK versions.
+  *
+  * @parameter expression="${gae.disableUpdateCheck}" default-value="false"
+  */
+  protected boolean disableUpdateCheck;
 
   public void execute() throws MojoExecutionException, MojoFailureException {
 
-    runKickStart("com.google.appengine.tools.KickStart", port + "," + address
-        + "," + war);
+    if (disableUpdateCheck) {
+      runKickStart("com.google.appengine.tools.development.DevAppServerMain",
+        "--address=" + address, "--port=" + port, "--disable_update_check",
+        appDir);
+
+    } else {
+      runKickStart("com.google.appengine.tools.development.DevAppServerMain",
+          "--address=" + address, "--port=" + port, appDir);
+    }
   }
 
 }

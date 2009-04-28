@@ -13,22 +13,17 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * Goal to upload a WAR project on Googles servers.
- *
- * @author rhansen@kindleit.net
- *
- * @goal update
- * @execute phase=package
- * @requiresOnline
+ * @author jpeynado@kindleit.net
+ * Goal for run a WAR project on the GAE dev server.
+ * @goal rollback
  */
-public class UpdateGoal extends EngineGoalBase {
 
-  /** Create or update an app version.
-   * This goal uploads your web application to the google app engine server.
-   */
+
+public class RollbackGoal extends EngineGoalBase {
+
   public void execute() throws MojoExecutionException, MojoFailureException {
-    getLog().info("Updating Google App Engine Server...");
-    runAppCfg("update", appDir);
+    getLog().info("Rollingback Last Update...");
+    runAppCfg("rollback", appDir);
   }
 }
 

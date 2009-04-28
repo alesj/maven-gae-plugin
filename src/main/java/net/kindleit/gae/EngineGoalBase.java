@@ -17,6 +17,9 @@ import com.google.appengine.tools.admin.AppCfg;
  */
 public abstract class EngineGoalBase extends AbstractMojo {
 
+  public static final String PLUGIN_VERSION="0.1";
+  protected static final String[] ARG_TYPE = new String[0];
+
   /** The Maven project reference.
    *
    * @parameter expression="${project}"
@@ -88,27 +91,27 @@ public abstract class EngineGoalBase extends AbstractMojo {
   * @param command command to run through AppCfg
   * @param commandArguments arguments to the AppCfg command.
   */
-  protected final void runAppCFG(final String command,
+  protected final void runAppCfg(final String command,
       final String ... commandArguments) {
 
-    final List<String> args = getCommonArgs();
+    final List<String> args = getAppCfgArgs();
     args.addAll(Lists.asList(command, commandArguments));
 
-    AppCfg.main(args.toArray(new String[0]));
+    AppCfg.main(args.toArray(ARG_TYPE));
   }
 
   /** Passes command to the Google App Engine KickStart runner.
    *
-   * @param command command to run through KickStart
+   * @param startClass command to run through KickStart
    * @param commandArguments arguments to the KickStart command.
    */
-  protected final void runKickStart(final String command,
+  protected final void runKickStart(final String startClass,
       final String ... commandArguments) {
 
-    final List<String> args = Lists.asList(command, commandArguments);
-    //args.addAll(getCommonArgs()); <- ant-macros.xml only specify 3 args.
+    final List<String> args = Lists.asList(startClass, commandArguments);
+    args.addAll(getCommonArgs());
 
-    KickStart.main(args.toArray(new String[0]));
+    KickStart.main(args.toArray(ARG_TYPE));
   }
 
   /** Generate all common Google AppEngine Task Parameters for use in all the
@@ -116,19 +119,26 @@ public abstract class EngineGoalBase extends AbstractMojo {
    *
    * @return List of arguments to add.
    */
-  private final List<String> getCommonArgs () {
-    final List<String> args = new ArrayList<String>(6);
+  protected final List<String> getAppCfgArgs () {
+    final List<String> args = getCommonArgs();
 
-    args.add("--sdk_root=" + sdkDirectory);
 
     addBooleanOption(args, "--disable_prompt", !settings.getInteractiveMode());
 
     addStringOption(args, "--email=", emailAccount);
-    addStringOption(args, "--server=", uploadServer);
     addStringOption(args, "--host=", hostString);
     addBooleanOption(args, "--passin", passIn);
     addBooleanOption(args, "--enable_jar_splitting", splitJars);
     addBooleanOption(args, "--retain_upload_dir", keepTempUploadDir);
+
+    return args;
+  }
+
+  protected final List<String> getCommonArgs() {
+    final List<String> args = new ArrayList<String>(8);
+
+    args.add("--sdk_root=" + sdkDirectory);
+    addStringOption(args, "--server=", uploadServer);
 
     return args;
   }
