@@ -4,7 +4,7 @@
   <groupId>net.kindleit</groupId>
   <artifactId>maven-gae-plugin</artifactId>
   <packaging>maven-plugin</packaging>
-  <version>0.3-SNAPSHOT</version>
+  <version>0.4-SNAPSHOT</version>
   <name>maven-gae-plugin Maven Mojo</name>
   <url>http://maven.apache.org</url>
 
@@ -33,13 +33,21 @@
     <developerConnection>scm:svn:https://maven-gae-plugin.googlecode.com/svn/trunk/</developerConnection>
     <url>http://code.google.com/p/maven-gae-plugin/source/browse/</url>
   </scm>
+  
+  <repositories>
+    <repository>
+      <id>google-maven-repo</id>
+      <name>Google Maven Repository</name>
+      <url>http://google-maven-repository.googlecode.com/svn/repository/</url>
+    </repository>
+  </repositories>
 
   <dependencies>
     <!-- Google App Engine Runtime Dependencies -->
     <dependency>
       <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-api</artifactId>
-      <version>1.0-sdk-1.2.0</version>
+      <artifactId>appengine-api-1.0-sdk</artifactId>
+      <version>1.2.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.appengine</groupId>

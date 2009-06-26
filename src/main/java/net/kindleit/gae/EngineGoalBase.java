@@ -17,7 +17,7 @@ import com.google.appengine.tools.admin.AppCfg;
  */
 public abstract class EngineGoalBase extends AbstractMojo {
 
-  public static final String PLUGIN_VERSION="0.1";
+  public static final String PLUGIN_VERSION="0.3";
   protected static final String[] ARG_TYPE = new String[0];
 
   /** The Maven project reference.
@@ -48,7 +48,7 @@ public abstract class EngineGoalBase extends AbstractMojo {
    * @parameter expression="${appengine.sdk.root}"
    * @required
    */
-  protected String sdkDirectory;
+  protected String sdkDir;
 
   /** Split large jar files (> 10M) into smaller fragments.
    *
@@ -137,7 +137,7 @@ public abstract class EngineGoalBase extends AbstractMojo {
   protected final List<String> getCommonArgs() {
     final List<String> args = new ArrayList<String>(8);
 
-    args.add("--sdk_root=" + sdkDirectory);
+    args.add("--sdk_root=" + sdkDir);
     addStringOption(args, "--server=", uploadServer);
 
     return args;
