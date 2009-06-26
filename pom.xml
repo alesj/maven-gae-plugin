@@ -41,6 +41,15 @@
       <url>http://google-maven-repository.googlecode.com/svn/repository/</url>
     </repository>
   </repositories>
+  
+  <distributionManagement>
+    <downloadUrl>http://code.google.com/p/maven-gae-plugin/downloads/list</downloadUrl>
+    <repository>
+      <id>maven-gae-deploy</id>
+      <name>Local Maven Deploy sync</name>
+      <url>file://${basedir}/target/repository</url>
+    </repository>
+  </distributionManagement>
 
   <dependencies>
     <!-- Google App Engine Runtime Dependencies -->
