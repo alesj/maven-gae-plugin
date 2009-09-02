@@ -62,6 +62,13 @@ public abstract class EngineGoalBase extends AbstractMojo {
    */
   protected String appDir;
 
+  /** Specifies where the Google App Engine SDK is located.
+  *
+  * @parameter expression="${appengine.sdk.root}" default-value="${project.build.directory}/appEngine"
+  * @required
+  */
+ protected String sdkDir;
+
   /** Split large jar files (> 10M) into smaller fragments.
    *
    * @parameter expression="${gae.deps.split}" default-value="false"
