@@ -138,7 +138,16 @@ public abstract class EngineGoalBase extends AbstractMojo {
     args.addAll(getCommonArgs());
     args.addAll(Arrays.asList(commandArguments));
 
+    // hack for getting appengine-tools-api.jar on a runtime classpath
+    // (KickStart checks java.class.path system property for classpath entries)
+    String classpath = System.getProperty("java.class.path");
+    System.setProperty("java.class.path", 
+    		classpath + File.pathSeparator + sdkDir + "/lib/appengine-tools-api.jar");
+    
     KickStart.main(args.toArray(ARG_TYPE));
+    
+    // restore java.class.path system property
+    System.setProperty("java.class.path", classpath);
   }
 
   /** Generate all common Google AppEngine Task Parameters for use in all the
