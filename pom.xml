@@ -13,6 +13,9 @@
 		<junit.version>3.8.2</junit.version>
 		<gae.version>1.2.1</gae.version>
 		<ant.version>1.7.1</ant.version>
+        <gae.home>
+            ${settings.localRepository}/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}
+        </gae.home>
 	</properties>
 
 	<build>
@@ -27,6 +30,147 @@
 					<showWarnings>true</showWarnings>
 				</configuration>
 			</plugin>
+            <!-- Unpacking of GAE SDK -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>
+                                        com.google.appengine
+                                    </groupId>
+                                    <artifactId>
+                                        appengine-java-sdk
+                                    </artifactId>
+                                    <version>${gae.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${settings.localRepository}/com/google/appengine/appengine-java-sdk/${gae.version}/
+                                    </outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 
+                Installation of required jars from unpacked GAE SDK 
+                to local repository as individual artifacts
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-geronimo-jta</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.google.appengine</groupId>
+                            <artifactId>geronimo-jta</artifactId>
+                            <version>1.1_spec-1.1.1</version>
+                            <packaging>jar</packaging>
+                            <file>
+                                ${gae.home}/lib/user/orm/geronimo-jta_1.1_spec-1.1.1.jar
+                            </file>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-jdo2-api</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.google.appengine</groupId>
+                            <artifactId>jdo2-api</artifactId>
+                            <version>2.3-SNAPSHOT</version>
+                            <packaging>jar</packaging>
+                            <file>
+                                ${gae.home}/lib/user/orm/jdo2-api-2.3-SNAPSHOT.jar
+                            </file>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-appengine-tools-api</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.google.appengine</groupId>
+                            <artifactId>appengine-tools-api</artifactId>
+                            <version>1.0</version>
+                            <packaging>jar</packaging>
+                            <file>
+                                ${gae.home}/lib/appengine-tools-api.jar
+                            </file>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-geronimo-api</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.google.appengine</groupId>
+                            <artifactId>geronimo-jpa</artifactId>
+                            <version>3.0_spec-1.1.1</version>
+                            <packaging>jar</packaging>
+                            <file>
+                                ${gae.home}/lib/user/orm/geronimo-jpa_3.0_spec-1.1.1.jar
+                            </file>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-datanucleus-appengine</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.google.appengine</groupId>
+                            <artifactId>
+                                datanucleus-appengine
+                            </artifactId>
+                            <version>1.0.1.final</version>
+                            <packaging>jar</packaging>
+                            <file>
+                                ${gae.home}/lib/user/orm/datanucleus-appengine-1.0.1.final.jar
+                            </file>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-datanucleus-jpa</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.google.appengine</groupId>
+                            <artifactId>datanucleus-jpa</artifactId>
+                            <version>1.1.0</version>
+                            <packaging>jar</packaging>
+                            <file>
+                                ${gae.home}/lib/user/orm/datanucleus-jpa-1.1.0.jar
+                            </file>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 
@@ -59,13 +203,86 @@
 	</distributionManagement>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-java-sdk</artifactId>
-			<version>${gae.version}</version>
-			<type>zip</type>
-		</dependency>
+        <!-- Google App Engine API -->
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-1.0-sdk</artifactId>
+            <version>${gae.version}</version>
+        </dependency>
 
+        <!-- Google App Engine Runtime Dependencies -->
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>geronimo-jta</artifactId>
+            <version>1.1_spec-1.1.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>jdo2-api</artifactId>
+            <version>2.3-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>geronimo-jpa</artifactId>
+            <version>3.0_spec-1.1.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>datanucleus-appengine</artifactId>
+            <version>1.0.1.final</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <!--<groupId>com.google.appengine</groupId>-->
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>1.1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>transaction-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>datanucleus-jpa</artifactId>
+            <version>1.1.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- App Engine Development Classes -->
+        <!--
+            <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-stubs</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>
+            ${gae.home}/lib/impl/appengine-api-stubs.jar
+            </systemPath>
+            </dependency>
+            <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-local-runtime</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>
+            ${gae.home}/lib/impl/appengine-local-runtime.jar
+            </systemPath>
+            </dependency>
+        -->
 		<dependency>
 		    <groupId>org.apache.ant</groupId>
 		    <artifactId>ant</artifactId>
@@ -78,11 +295,19 @@
 		    <version>${ant.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-settings</artifactId>
-			<version>${maven.plugin.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-tools-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!-- TODO is this needed?
+            <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-settings</artifactId>
+            <version>${maven.plugin.version}</version>
+            </dependency>
+        -->
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-project</artifactId>
@@ -94,12 +319,14 @@
 			<version>${maven.plugin.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
+        <!-- TODO there are no tests yet
+            <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+            </dependency>
+        -->
 
 	</dependencies>
 </project>
