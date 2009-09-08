@@ -15,6 +15,9 @@ import org.apache.maven.settings.Settings;
 
 import sun.misc.JarFilter;
 
+import com.google.appengine.tools.KickStart;
+import com.google.appengine.tools.admin.AppCfg;
+
 /** Base MOJO class for working with the Google App Engine SDK.
  *
  * @author rhansen@kindleit.net
