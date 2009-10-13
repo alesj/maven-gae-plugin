@@ -121,6 +121,12 @@ public abstract class EngineGoalBase extends AbstractMojo {
     args.addAll(getAppCfgArgs());
     args.add(command);
     args.addAll(Arrays.asList(commandArguments));
+    
+    // explicitly specify SDK root, as auto-discovery fails when 
+    // appengine-tools-api.jar is loaded from Maven repo, not SDK
+    if (System.getProperty("appengine.sdk.root") == null) {
+        System.setProperty("appengine.sdk.root", sdkDir);
+    }
 
     AppCfg.main(args.toArray(ARG_TYPE));
   }
