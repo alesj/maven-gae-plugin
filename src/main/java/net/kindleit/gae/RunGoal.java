@@ -12,11 +12,13 @@ package net.kindleit.gae;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-/**
+/** Goal for run a WAR project on the GAE dev  server.
+ *
  * @author jpeynado@kindleit.net
- * @author rhansen@kindleit.net Goal for run a WAR project on the GAE dev
- *         server.
+ * @author rhansen@kindleit.net
+ *
  * @goal run
+ * @requiresProject true
  * @requiresDependencyResolution runtime
  * @execute phase="test-compile"
  */

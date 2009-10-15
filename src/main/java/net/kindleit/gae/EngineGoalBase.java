@@ -8,32 +8,45 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
+import org.codehaus.plexus.archiver.ArchiverException;
+import org.codehaus.plexus.archiver.UnArchiver;
+import org.codehaus.plexus.archiver.manager.ArchiverManager;
+import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
 
 import sun.misc.JarFilter;
 
 /** Base MOJO class for working with the Google App Engine SDK.
  *
  * @author rhansen@kindleit.net
+ * @requiresProject true
  */
 public abstract class EngineGoalBase extends AbstractMojo {
   public static final String PLUGIN_VERSION="0.9";
 
   protected static final String[] ARG_TYPE = new String[0];
 
-  private static final String APPCFG_CLASS =
+  protected static final String APPENGINE_ARTIFACTID = "appengine-java-sdk";
+  protected static final String APPENGINE_GROUPID = "com.google.appengine";
+
+  protected static final String APPCFG_CLASS =
     "com.google.appengine.tools.admin.AppCfg";
-  private static final String KICKSTART_CLASS =
+  protected static final String KICKSTART_CLASS =
     "com.google.appengine.tools.admin.KickStart";
 
-  private static final String SDK_LIBS_NOTFOUND =
+  protected static final String SDK_LIBS_NOTFOUND =
     "AppEngine tools SDK could not be found";
-  private static final String SDK_APPCFG_NOTFOUND =
+  protected static final String SDK_APPCFG_NOTFOUND =
     "AppCfg Class not found at: " + APPCFG_CLASS;
-  private static final String SDK_KICKSTART_NOTFOUND =
+  protected static final String SDK_KICKSTART_NOTFOUND =
     "KickStart Class not found at: " + KICKSTART_CLASS;
 
   private static URLClassLoader classLoader;
@@ -48,12 +61,53 @@ public abstract class EngineGoalBase extends AbstractMojo {
   protected MavenProject project;
 
   /** The Maven settings reference.
-  *
-  * @parameter expression="${settings}"
-  * @required
-  * @readonly
-  */
- protected Settings settings;
+   *
+   * @parameter expression="${settings}"
+   * @required
+   * @readonly
+   */
+  protected Settings settings;
+
+  /**
+   * Location of the local repository.
+   *
+   * @parameter expression="${localRepository}"
+   * @readonly
+   * @required
+   */
+  protected ArtifactRepository local;
+
+  /**
+   * List of Remote Repositories used by the resolver
+   *
+   * @parameter expression="${project.remoteArtifactRepositories}"
+   * @readonly
+   * @required
+   */
+  protected List<?> remoteRepos;
+
+
+  /**
+   * Used to look up Artifacts in the remote repository.
+   *
+   * @component
+   */
+  protected org.apache.maven.artifact.factory.ArtifactFactory factory;
+
+  /**
+   * Used to look up Artifacts in the remote repository.
+   *
+   * @component
+   */
+  protected ArtifactResolver resolver;
+
+  /**
+   * To look up Archiver/UnArchiver implementations
+   *
+   * @component
+   */
+  protected ArchiverManager archiverManager;
+
 
   /** Overrides where the Project War Directory is located.
    *
@@ -63,11 +117,18 @@ public abstract class EngineGoalBase extends AbstractMojo {
   protected String appDir;
 
   /** Specifies where the Google App Engine SDK is located.
+   *
+   * @parameter expression="${appengine.sdk.root}" default-value="${project.build.directory}/appEngine"
+   * @required
+   */
+  protected String sdkDir;
+
+  /** Version of the Google App Engine to use.
   *
-  * @parameter expression="${appengine.sdk.root}" default-value="${project.build.directory}/appEngine"
+  * @parameter expression="${gae.version}" default-value="1.2.6"
   * @required
   */
- protected String sdkDir;
+  protected String gaeVersion;
 
   /** Split large jar files (> 10M) into smaller fragments.
    *
@@ -106,36 +167,59 @@ public abstract class EngineGoalBase extends AbstractMojo {
   protected boolean passIn;
 
 
+  /**
+   * @return Returns the project.
+   */
+  public MavenProject getProject ()
+  {
+      return project;
+  }
+
+
   /** Passes command to the Google App Engine AppCfg runner.
   *
   * @param command command to run through AppCfg
   * @param commandArguments arguments to the AppCfg command.
+   * @throws MojoExecutionException
   */
   protected final void runAppCfg(final String command,
-      final String ... commandArguments) {
+      final String ... commandArguments) throws MojoExecutionException {
 
     final List<String> args = new ArrayList<String>();
     args.addAll(getAppCfgArgs());
     args.add(command);
     args.addAll(Arrays.asList(commandArguments));
 
-    AppCfg.main(args.toArray(ARG_TYPE));
+    try {
+      getEngineClass(APPCFG_CLASS, SDK_APPCFG_NOTFOUND)
+        .getMethod("main", String[].class)
+          .invoke(null, (Object) args.toArray(ARG_TYPE));
+    } catch (final Exception e) {
+      throw new MojoExecutionException("Unable to execute AppCfg command: " + command, e);
+    }
   }
 
   /** Passes command to the Google App Engine KickStart runner.
-  *
-  * @param startClass command to run through KickStart
-  * @param commandArguments arguments to the KickStart command.
-  */
+   *
+   * @param startClass command to run through KickStart
+   * @param commandArguments arguments to the KickStart command.
+   * @throws MojoExecutionException
+   */
   protected final void runKickStart(final String startClass,
-    final String ... commandArguments) {
+    final String ... commandArguments) throws MojoExecutionException {
 
     final List<String> args = new ArrayList<String>();
     args.add(startClass);
     args.addAll(getCommonArgs());
     args.addAll(Arrays.asList(commandArguments));
 
-    KickStart.main(args.toArray(ARG_TYPE));
+    try {
+      getEngineClass(KICKSTART_CLASS, SDK_KICKSTART_NOTFOUND)
+        .getMethod("main", String[].class)
+          .invoke(null, (Object) args.toArray(ARG_TYPE));
+    } catch (final Exception e) {
+      throw new MojoExecutionException("Unable to execute Kickstart class: " + startClass, e);
+    }
   }
 
   /** Generate all common Google AppEngine Task Parameters for use in all the
@@ -212,8 +296,73 @@ public abstract class EngineGoalBase extends AbstractMojo {
     }
   }
 
-  private File getSdkLibDir() {
-    return null;
+  private File getSdkLibDir() throws MojoExecutionException {
+    final File sdkLibDir = new File(sdkDir);
+    if (!sdkLibDir.exists()) {
+      unpackSDK(sdkLibDir);
+    }
+    return sdkLibDir;
+  }
+
+  /**
+   * This method gets the Artifact object and calls DependencyUtil.unpackFile.
+   *
+   * @param artifactItem
+   *            containing the information about the Artifact to unpack.
+   *
+   * @throws MojoExecutionException
+   *             with a message if an error occurs.
+   *
+   * @see #getArtifact
+   * @see DependencyUtil#unpackFile(Artifact, File, File, ArchiverManager,
+   *      Log)
+   */
+  private void unpackSDK (final File sdkLibDir) throws MojoExecutionException {
+    Artifact sdkArtifact;
+    try {
+      sdkArtifact =
+          factory.createArtifact(APPENGINE_GROUPID, APPENGINE_ARTIFACTID,
+              gaeVersion, "compile", "zip");
+
+      resolver.resolveAlways(sdkArtifact, remoteRepos, local);
+
+    } catch ( final ArtifactResolutionException e ) {
+      throw new MojoExecutionException( "Unable to resolve artifact.", e );
+
+    } catch ( final ArtifactNotFoundException e ) {
+      throw new MojoExecutionException( "Unable to find artifact.", e );
+    }
+    unpack(sdkArtifact.getFile(), sdkLibDir);
+  }
+
+  /** Unpacks the archive file.
+   *
+   * @param file File to be unpacked.
+   * @param location Location where to put the unpacked files.
+   */
+  private void unpack (final File file, final File location)
+  throws MojoExecutionException {
+    try {
+      getLog().info("Unpacking " + file.getPath()
+          + " to\n  " + location.getPath());
+
+      location.mkdirs();
+
+      UnArchiver unArchiver;
+      unArchiver = archiverManager.getUnArchiver(file);
+      unArchiver.setSourceFile(file);
+      unArchiver.setDestDirectory(location);
+      unArchiver.extract();
+
+    } catch (final NoSuchArchiverException e) {
+      throw new MojoExecutionException("Unknown archiver type", e);
+
+    } catch (final ArchiverException e) {
+      e.printStackTrace();
+      throw new MojoExecutionException("Error unpacking file: " + file
+                                       + " to: " + location + "\r\n"
+                                       + e.toString(), e);
+    }
   }
 
 }

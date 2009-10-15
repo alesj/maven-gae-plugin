@@ -15,12 +15,11 @@ import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.selectors.AndSelector;
 import org.apache.tools.ant.types.selectors.FilenameSelector;
 import org.apache.tools.ant.types.selectors.NotSelector;
-
-import com.google.appengine.tools.enhancer.EnhancerTask;
 
 /** Goal to .
  *
@@ -29,6 +28,12 @@ import com.google.appengine.tools.enhancer.EnhancerTask;
  * @goal enhance
  */
 public class EnhanceGoal extends EngineGoalBase {
+
+  protected static String ENHANCE_CLS =
+    "com.google.appengine.tools.enhancer.EnhancerTask";
+  protected static final String SDK_ENHANCE_NOTFOUND =
+    "Enhance class not found in gae classpath";
+
 
   /** Fileset to augment.
    * @parameter
@@ -49,18 +54,27 @@ public class EnhanceGoal extends EngineGoalBase {
 
     getLog().info("Enhancing DataNucleus Clases...");
 
+    final Project prj = new Project();
+    prj.init();
+
     final FileSet fs = new FileSet();
     fs.setDir(enhanceFolder);
     addExcludes(fs);
     addIncludes(fs);
 
-    final EnhancerTask ehTask = new EnhancerTask();
-    ehTask.addFileSet(fs);
-    ehTask.setEnhancerName("enhance");
-    ehTask.execute();
+    final Class<?> ehClass = getEngineClass(ENHANCE_CLS, SDK_ENHANCE_NOTFOUND);
+
+    Object eh;
+    try {
+      eh = ehClass.getConstructor().newInstance();
+      ehClass.getMethod("setProject", Project.class).invoke(eh, prj);
+      ehClass.getMethod("addFileSet", FileSet.class).invoke(eh, fs);
+      ehClass.getMethod("setEnhancerName", String.class).invoke(eh, "enhance");
+      ehClass.getMethod("execute").invoke(eh);
+    } catch (final Exception e) {
+      throw new MojoFailureException("Could not enhance libraries", e);
+    }
   }
-
-
 
   private void addIncludes(final FileSet fs) {
     final AndSelector fsIncludes = new AndSelector();
