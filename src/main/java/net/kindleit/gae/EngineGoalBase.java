@@ -1,19 +1,13 @@
 package net.kindleit.gae;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
-
-import sun.misc.JarFilter;
 
 import com.google.appengine.tools.KickStart;
 import com.google.appengine.tools.admin.AppCfg;
@@ -23,24 +17,9 @@ import com.google.appengine.tools.admin.AppCfg;
  * @author rhansen@kindleit.net
  */
 public abstract class EngineGoalBase extends AbstractMojo {
-  public static final String PLUGIN_VERSION="0.9";
+  public static final String PLUGIN_VERSION="0.4.1";
 
   protected static final String[] ARG_TYPE = new String[0];
-
-  private static final String APPCFG_CLASS =
-    "com.google.appengine.tools.admin.AppCfg";
-  private static final String KICKSTART_CLASS =
-    "com.google.appengine.tools.admin.KickStart";
-
-  private static final String SDK_LIBS_NOTFOUND =
-    "AppEngine tools SDK could not be found";
-  private static final String SDK_APPCFG_NOTFOUND =
-    "AppCfg Class not found at: " + APPCFG_CLASS;
-  private static final String SDK_KICKSTART_NOTFOUND =
-    "KickStart Class not found at: " + KICKSTART_CLASS;
-
-  private static URLClassLoader classLoader;
-
 
   /** The Maven project reference.
    *
@@ -121,13 +100,7 @@ public abstract class EngineGoalBase extends AbstractMojo {
     args.addAll(getAppCfgArgs());
     args.add(command);
     args.addAll(Arrays.asList(commandArguments));
-    
-    // explicitly specify SDK root, as auto-discovery fails when 
-    // appengine-tools-api.jar is loaded from Maven repo, not SDK
-    if (System.getProperty("appengine.sdk.root") == null) {
-        System.setProperty("appengine.sdk.root", sdkDir);
-    }
-
+    assureSystemProperties();
     AppCfg.main(args.toArray(ARG_TYPE));
   }
 
@@ -144,16 +117,31 @@ public abstract class EngineGoalBase extends AbstractMojo {
     args.addAll(getCommonArgs());
     args.addAll(Arrays.asList(commandArguments));
 
+    assureSystemProperties();
+    KickStart.main(args.toArray(ARG_TYPE));
+  }
+
+
+
+
+
+  /** Groups alterations to System properties for the proper execution
+   * of the actual GAE code. */
+  protected void assureSystemProperties() {
+    // explicitly specify SDK root, as auto-discovery fails when
+    // appengine-tools-api.jar is loaded from Maven repo, not SDK
+    if (System.getProperty("appengine.sdk.root") == null) {
+        System.setProperty("appengine.sdk.root", sdkDir);
+    }
+
     // hack for getting appengine-tools-api.jar on a runtime classpath
     // (KickStart checks java.class.path system property for classpath entries)
-    String classpath = System.getProperty("java.class.path");
-    System.setProperty("java.class.path", 
-    		classpath + File.pathSeparator + sdkDir + "/lib/appengine-tools-api.jar");
-    
-    KickStart.main(args.toArray(ARG_TYPE));
-    
-    // restore java.class.path system property
-    System.setProperty("java.class.path", classpath);
+    final String classpath = System.getProperty("java.class.path");
+    final String toolsJar = sdkDir + "/lib/appengine-tools-api.jar";
+    if (!classpath.contains(toolsJar)) {
+      System.setProperty("java.class.path",
+          classpath + File.pathSeparator + toolsJar);
+    }
   }
 
   /** Generate all common Google AppEngine Task Parameters for use in all the
@@ -197,41 +185,6 @@ public abstract class EngineGoalBase extends AbstractMojo {
     if (var != null && var.length() > 0) {
       args.add(key + var);
     }
-  }
-
-  protected Class<?> getEngineClass(final String clsName,
-      final String clsErrorMsg) throws MojoExecutionException {
-    try {
-      return getClassLoader().loadClass(clsName);
-    } catch (final ClassNotFoundException e) {
-      throw new MojoExecutionException(clsErrorMsg, e);
-    }
-  }
-
-  private ClassLoader getClassLoader() throws MojoExecutionException {
-    synchronized (EngineGoalBase.class) {
-      if (classLoader != null) {
-        return classLoader;
-      }
-    }
-    synchronized (EngineGoalBase.class) {
-      try {
-        final List<URL> urls = new ArrayList<URL>();
-
-        for(final File jar : getSdkLibDir().listFiles(new JarFilter())) {
-          urls.add(jar.toURI().toURL());
-        }
-
-        classLoader = new URLClassLoader(urls.toArray(new URL[0]));
-      } catch (final MalformedURLException e) {
-        throw new MojoExecutionException(SDK_LIBS_NOTFOUND, e);
-      }
-      return classLoader;
-    }
-  }
-
-  private File getSdkLibDir() {
-    return null;
   }
 
 }

@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.selectors.AndSelector;
 import org.apache.tools.ant.types.selectors.FilenameSelector;
@@ -49,17 +50,21 @@ public class EnhanceGoal extends EngineGoalBase {
 
     getLog().info("Enhancing DataNucleus Clases...");
 
+    final Project pj = new Project();
+      pj.init();
+
+    final EnhancerTask ehTask = new EnhancerTask();
+
     final FileSet fs = new FileSet();
     fs.setDir(enhanceFolder);
     addExcludes(fs);
     addIncludes(fs);
 
-    final EnhancerTask ehTask = new EnhancerTask();
+    ehTask.setProject(pj);
     ehTask.addFileSet(fs);
     ehTask.setEnhancerName("enhance");
     ehTask.execute();
   }
-
 
 
   private void addIncludes(final FileSet fs) {
@@ -95,6 +100,5 @@ public class EnhanceGoal extends EngineGoalBase {
       fs.addNot(fsExcludes);
     }
   }
+
 }
-
-

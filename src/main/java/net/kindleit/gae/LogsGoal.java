@@ -54,6 +54,7 @@ public class LogsGoal extends EngineGoalBase {
     args.add(appDir);
     args.add(outputFile.toString());
 
+    assureSystemProperties();
     AppCfg.main(args.toArray(ARG_TYPE));
   }
 }
