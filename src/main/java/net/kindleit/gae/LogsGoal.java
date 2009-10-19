@@ -48,7 +48,7 @@ public class LogsGoal extends EngineGoalBase {
     final List<String> args = getCommonArgs();
     args.add("--num_days=" + days);
     if (severity != null) {
-      args.add("severity=" + severity);
+      args.add("--severity=" + severity);
     }
     args.add("request_logs");
     args.add(appDir);
