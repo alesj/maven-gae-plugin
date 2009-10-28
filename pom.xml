@@ -181,16 +181,40 @@
 	</scm>
 
 	<repositories>
-		<repository>
-			<id>google-maven-repo</id>
-			<name>Google Maven Repository</name>
-			<url>http://google-maven-repository.googlecode.com/svn/repository/</url>
-		</repository>
-    <repository>
-      <id>datanucleus-nightly</id>
-      <name>datanucleus.org nightly</name>
-      <url>http://www.datanucleus.org/downloads/maven2-nightly</url>
-    </repository>
+	    <repository>
+	        <id>google-maven-repo</id>
+	        <name>Google Maven Repository</name>
+	        <url>
+	            http://google-maven-repository.googlecode.com/svn/repository/
+	        </url>
+            <releases>
+                <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+	    </repository>
+	    <repository>
+	        <id>datanucleus-nightly</id>
+	        <name>datanucleus.org nightly</name>
+	        <url>
+	            http://www.datanucleus.org/downloads/maven2-nightly
+	        </url>
+            <releases>
+                <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+	    </repository>
 	</repositories>
 
 	<distributionManagement>
