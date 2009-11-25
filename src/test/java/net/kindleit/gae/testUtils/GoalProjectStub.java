@@ -1,7 +1,19 @@
+/* Copyright 2009 Kindleit.net Software Development
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.kindleit.gae.testUtils;
-
-/* 
- * Licensed to the Apache Software Foundation (ASF) under one
+/*
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -16,7 +28,7 @@ package net.kindleit.gae.testUtils;
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 
 import java.io.File;
@@ -164,68 +176,77 @@ public class GoalProjectStub
     }
 
     // kinda dangerous...
-    public GoalProjectStub( Model model )
+    public GoalProjectStub( final Model model )
     {
         // super(model);
         super( (Model) null );
     }
 
     // kinda dangerous...
-    public GoalProjectStub( MavenProject project )
+    public GoalProjectStub( final MavenProject project )
     {
         // super(project);
         super( (Model) null );
     }
 
-    public String getModulePathAdjustment( MavenProject mavenProject )
+    @Override
+    public String getModulePathAdjustment( final MavenProject mavenProject )
         throws IOException
     {
         return "";
     }
 
+    @Override
     public Artifact getArtifact()
     {
         if ( artifact == null )
         {
-            ArtifactHandler ah = new DefaultArtifactHandlerStub( "jar", null );
+            final ArtifactHandler ah = new DefaultArtifactHandlerStub( "jar", null );
 
-            VersionRange vr = VersionRange.createFromVersion( "1.0" );
-            Artifact art = new DefaultArtifact( "group", "artifact", vr, Artifact.SCOPE_COMPILE, "jar", null, ah, false );
+            final VersionRange vr = VersionRange.createFromVersion( "1.0" );
+            final Artifact art = new DefaultArtifact( "group", "artifact", vr, Artifact.SCOPE_COMPILE, "jar", null, ah, false );
             setArtifact( art );
         }
         return artifact;
     }
 
-    public void setArtifact( Artifact artifact )
+    @Override
+    public void setArtifact( final Artifact artifact )
     {
         this.artifact = artifact;
     }
 
+    @Override
     public Model getModel()
     {
         return model;
     }
 
+    @Override
     public MavenProject getParent()
     {
         return parent;
     }
 
-    public void setParent( MavenProject mavenProject )
+    @Override
+    public void setParent( final MavenProject mavenProject )
     {
-        this.parent = mavenProject;
+        parent = mavenProject;
     }
 
-    public void setRemoteArtifactRepositories( List list )
+    @Override
+    public void setRemoteArtifactRepositories( final List list )
     {
 
     }
 
+    @Override
     public List getRemoteArtifactRepositories()
     {
         return Collections.singletonList( "" );
     }
 
+    @Override
     public boolean hasParent()
     {
         if ( parent != null )
@@ -238,26 +259,31 @@ public class GoalProjectStub
         }
     }
 
+    @Override
     public File getFile()
     {
         return file;
     }
 
-    public void setFile( File file )
+    @Override
+    public void setFile( final File file )
     {
         this.file = file;
     }
 
+    @Override
     public File getBasedir()
     {
         return new File( PlexusTestCase.getBasedir() );
     }
 
-    public void setDependencies( List list )
+    @Override
+    public void setDependencies( final List list )
     {
         dependencies = list;
     }
 
+    @Override
     public List getDependencies()
     {
         if ( dependencies == null )
@@ -267,10 +293,11 @@ public class GoalProjectStub
         return dependencies;
     }
 
-    public void setDependencyManagement(DependencyManagement depMgt)
+    public void setDependencyManagement(final DependencyManagement depMgt)
     {
-        this.dependencyManagement = depMgt;
+        dependencyManagement = depMgt;
     }
+    @Override
     public DependencyManagement getDependencyManagement()
     {
         if ( dependencyManagement == null )
@@ -281,7 +308,8 @@ public class GoalProjectStub
         return dependencyManagement;
     }
 
-    public void addCompileSourceRoot( String string )
+    @Override
+    public void addCompileSourceRoot( final String string )
     {
         if ( compileSourceRoots == null )
         {
@@ -293,7 +321,8 @@ public class GoalProjectStub
         }
     }
 
-    public void addScriptSourceRoot( String string )
+    @Override
+    public void addScriptSourceRoot( final String string )
     {
         if ( scriptSourceRoots == null )
         {
@@ -305,7 +334,8 @@ public class GoalProjectStub
         }
     }
 
-    public void addTestCompileSourceRoot( String string )
+    @Override
+    public void addTestCompileSourceRoot( final String string )
     {
         if ( testCompileSourceRoots == null )
         {
@@ -317,11 +347,13 @@ public class GoalProjectStub
         }
     }
 
+    @Override
     public List getCompileSourceRoots()
     {
         return compileSourceRoots;
     }
 
+    @Override
     public List getScriptSourceRoots()
     {
         return scriptSourceRoots;
@@ -338,7 +370,7 @@ public class GoalProjectStub
         return compileSourceRoots;
     }
 
-    public void setCompileArtifacts( List compileArtifacts )
+    public void setCompileArtifacts( final List compileArtifacts )
     {
         this.compileArtifacts = compileArtifacts;
     }
@@ -396,107 +428,107 @@ public class GoalProjectStub
         return systemArtifacts;
     }
 
-    public void setRuntimeClasspathElements( List runtimeClasspathElements )
+    public void setRuntimeClasspathElements( final List runtimeClasspathElements )
     {
         this.runtimeClasspathElements = runtimeClasspathElements;
     }
 
-    public void setAttachedArtifacts( List attachedArtifacts )
+    public void setAttachedArtifacts( final List attachedArtifacts )
     {
         this.attachedArtifacts = attachedArtifacts;
     }
 
-    public void setCompileSourceRoots( List compileSourceRoots )
+    public void setCompileSourceRoots( final List compileSourceRoots )
     {
         this.compileSourceRoots = compileSourceRoots;
     }
 
-    public void setTestCompileSourceRoots( List testCompileSourceRoots )
+    public void setTestCompileSourceRoots( final List testCompileSourceRoots )
     {
         this.testCompileSourceRoots = testCompileSourceRoots;
     }
 
-    public void setScriptSourceRoots( List scriptSourceRoots )
+    public void setScriptSourceRoots( final List scriptSourceRoots )
     {
         this.scriptSourceRoots = scriptSourceRoots;
     }
 
-    public void setArtifactMap( Map artifactMap )
+    public void setArtifactMap( final Map artifactMap )
     {
         // this.artifactMap = artifactMap;
     }
 
-    public void setPluginArtifactMap( Map pluginArtifactMap )
+    public void setPluginArtifactMap( final Map pluginArtifactMap )
     {
         // this.pluginArtifactMap = pluginArtifactMap;
     }
 
-    public void setReportArtifactMap( Map reportArtifactMap )
+    public void setReportArtifactMap( final Map reportArtifactMap )
     {
         // this.reportArtifactMap = reportArtifactMap;
     }
 
-    public void setExtensionArtifactMap( Map extensionArtifactMap )
+    public void setExtensionArtifactMap( final Map extensionArtifactMap )
     {
         // this.extensionArtifactMap = extensionArtifactMap;
     }
 
-    public void setProjectReferences( Map projectReferences )
+    public void setProjectReferences( final Map projectReferences )
     {
         // this.projectReferences = projectReferences;
     }
 
-    public void setBuildOverlay( Build buildOverlay )
+    public void setBuildOverlay( final Build buildOverlay )
     {
         // this.buildOverlay = buildOverlay;
     }
 
-    public void setCompileDependencies( List compileDependencies )
+    public void setCompileDependencies( final List compileDependencies )
     {
         this.compileDependencies = compileDependencies;
     }
 
-    public void setSystemDependencies( List systemDependencies )
+    public void setSystemDependencies( final List systemDependencies )
     {
         this.systemDependencies = systemDependencies;
     }
 
-    public void setTestClasspathElements( List testClasspathElements )
+    public void setTestClasspathElements( final List testClasspathElements )
     {
         this.testClasspathElements = testClasspathElements;
     }
 
-    public void setTestDependencies( List testDependencies )
+    public void setTestDependencies( final List testDependencies )
     {
         this.testDependencies = testDependencies;
     }
 
-    public void setSystemClasspathElements( List systemClasspathElements )
+    public void setSystemClasspathElements( final List systemClasspathElements )
     {
         this.systemClasspathElements = systemClasspathElements;
     }
 
-    public void setSystemArtifacts( List systemArtifacts )
+    public void setSystemArtifacts( final List systemArtifacts )
     {
         this.systemArtifacts = systemArtifacts;
     }
 
-    public void setTestArtifacts( List testArtifacts )
+    public void setTestArtifacts( final List testArtifacts )
     {
         this.testArtifacts = testArtifacts;
     }
 
-    public void setRuntimeArtifacts( List runtimeArtifacts )
+    public void setRuntimeArtifacts( final List runtimeArtifacts )
     {
         this.runtimeArtifacts = runtimeArtifacts;
     }
 
-    public void setRuntimeDependencies( List runtimeDependencies )
+    public void setRuntimeDependencies( final List runtimeDependencies )
     {
         this.runtimeDependencies = runtimeDependencies;
     }
 
-    public void setModel( Model model )
+    public void setModel( final Model model )
     {
         this.model = model;
     }
@@ -506,9 +538,9 @@ public class GoalProjectStub
         return systemDependencies;
     }
 
-    public void setModelVersion( String string )
+    public void setModelVersion( final String string )
     {
-        this.modelVersion = string;
+        modelVersion = string;
     }
 
     public String getModelVersion()
@@ -521,9 +553,9 @@ public class GoalProjectStub
         return "";
     }
 
-    public void setGroupId( String string )
+    public void setGroupId( final String string )
     {
-        this.groupId = string;
+        groupId = string;
     }
 
     public String getGroupId()
@@ -531,9 +563,9 @@ public class GoalProjectStub
         return groupId;
     }
 
-    public void setArtifactId( String string )
+    public void setArtifactId( final String string )
     {
-        this.artifactId = string;
+        artifactId = string;
     }
 
     public String getArtifactId()
@@ -541,9 +573,9 @@ public class GoalProjectStub
         return artifactId;
     }
 
-    public void setName( String string )
+    public void setName( final String string )
     {
-        this.name = string;
+        name = string;
     }
 
     public String getName()
@@ -551,9 +583,9 @@ public class GoalProjectStub
         return name;
     }
 
-    public void setVersion( String string )
+    public void setVersion( final String string )
     {
-        this.version = string;
+        version = string;
     }
 
     public String getVersion()
@@ -566,14 +598,14 @@ public class GoalProjectStub
         return packaging;
     }
 
-    public void setPackaging( String string )
+    public void setPackaging( final String string )
     {
-        this.packaging = string;
+        packaging = string;
     }
 
-    public void setInceptionYear( String string )
+    public void setInceptionYear( final String string )
     {
-        this.inceptionYear = string;
+        inceptionYear = string;
     }
 
     public String getInceptionYear()
@@ -581,9 +613,9 @@ public class GoalProjectStub
         return inceptionYear;
     }
 
-    public void setUrl( String string )
+    public void setUrl( final String string )
     {
-        this.url = string;
+        url = string;
     }
 
     public String getUrl()
@@ -596,7 +628,7 @@ public class GoalProjectStub
         return null;
     }
 
-    public void setIssueManagement( IssueManagement issueManagement )
+    public void setIssueManagement( final IssueManagement issueManagement )
     {
 
     }
@@ -606,7 +638,7 @@ public class GoalProjectStub
         return null;
     }
 
-    public void setCiManagement( CiManagement ciManagement )
+    public void setCiManagement( final CiManagement ciManagement )
     {
 
     }
@@ -616,7 +648,7 @@ public class GoalProjectStub
         return null;
     }
 
-    public void setDistributionManagement( DistributionManagement distributionManagement )
+    public void setDistributionManagement( final DistributionManagement distributionManagement )
     {
 
     }
@@ -626,9 +658,9 @@ public class GoalProjectStub
         return null;
     }
 
-    public void setDescription( String string )
+    public void setDescription( final String string )
     {
-        this.description = string;
+        description = string;
     }
 
     public String getDescription()
@@ -636,7 +668,7 @@ public class GoalProjectStub
         return description;
     }
 
-    public void setOrganization( Organization organization )
+    public void setOrganization( final Organization organization )
     {
 
     }
@@ -646,7 +678,7 @@ public class GoalProjectStub
         return null;
     }
 
-    public void setScm( Scm scm )
+    public void setScm( final Scm scm )
     {
 
     }
@@ -656,7 +688,7 @@ public class GoalProjectStub
         return null;
     }
 
-    public void setMailingLists( List list )
+    public void setMailingLists( final List list )
     {
 
     }
@@ -666,12 +698,12 @@ public class GoalProjectStub
         return Collections.singletonList( "" );
     }
 
-    public void addMailingList( MailingList mailingList )
+    public void addMailingList( final MailingList mailingList )
     {
 
     }
 
-    public void setDevelopers( List list )
+    public void setDevelopers( final List list )
     {
 
     }
@@ -681,12 +713,12 @@ public class GoalProjectStub
         return Collections.singletonList( "" );
     }
 
-    public void addDeveloper( Developer developer )
+    public void addDeveloper( final Developer developer )
     {
 
     }
 
-    public void setContributors( List list )
+    public void setContributors( final List list )
     {
 
     }
@@ -696,12 +728,12 @@ public class GoalProjectStub
         return Collections.singletonList( "" );
     }
 
-    public void addContributor( Contributor contributor )
+    public void addContributor( final Contributor contributor )
     {
 
     }
 
-    public void setBuild( Build build )
+    public void setBuild( final Build build )
     {
 
     }
@@ -721,17 +753,17 @@ public class GoalProjectStub
         return Collections.singletonList( "" );
     }
 
-    public void addResource( Resource resource )
+    public void addResource( final Resource resource )
     {
 
     }
 
-    public void addTestResource( Resource resource )
+    public void addTestResource( final Resource resource )
     {
 
     }
 
-    public void setReporting( Reporting reporting )
+    public void setReporting( final Reporting reporting )
     {
 
     }
@@ -741,7 +773,7 @@ public class GoalProjectStub
         return null;
     }
 
-    public void setLicenses( List list )
+    public void setLicenses( final List list )
     {
 
     }
@@ -751,14 +783,14 @@ public class GoalProjectStub
         return Collections.singletonList( "" );
     }
 
-    public void addLicense( License license )
+    public void addLicense( final License license )
     {
 
     }
 
-    public void setArtifacts( Set set )
+    public void setArtifacts( final Set set )
     {
-        this.artifacts = set;
+        artifacts = set;
     }
 
     public Set getArtifacts()
@@ -778,7 +810,7 @@ public class GoalProjectStub
         return Collections.singletonMap( "", "" );
     }
 
-    public void setPluginArtifacts( Set set )
+    public void setPluginArtifacts( final Set set )
     {
 
     }
@@ -793,7 +825,7 @@ public class GoalProjectStub
         return Collections.singletonMap( "", "" );
     }
 
-    public void setReportArtifacts( Set set )
+    public void setReportArtifacts( final Set set )
     {
 
     }
@@ -808,7 +840,7 @@ public class GoalProjectStub
         return Collections.singletonMap( "", "" );
     }
 
-    public void setExtensionArtifacts( Set set )
+    public void setExtensionArtifacts( final Set set )
     {
 
     }
@@ -823,7 +855,7 @@ public class GoalProjectStub
         return Collections.singletonMap( "", "" );
     }
 
-    public void setParentArtifact( Artifact artifact )
+    public void setParentArtifact( final Artifact artifact )
     {
 
     }
@@ -858,12 +890,12 @@ public class GoalProjectStub
         return null;
     }
 
-    public void addPlugin( Plugin plugin )
+    public void addPlugin( final Plugin plugin )
     {
 
     }
 
-    public void injectPluginManagementInfo( Plugin plugin )
+    public void injectPluginManagementInfo( final Plugin plugin )
     {
 
     }
@@ -873,14 +905,14 @@ public class GoalProjectStub
         return collectedProjects;
     }
 
-    public void setCollectedProjects( List list )
+    public void setCollectedProjects( final List list )
     {
-        this.collectedProjects = list;
+        collectedProjects = list;
     }
 
-    public void setPluginArtifactRepositories( List list )
+    public void setPluginArtifactRepositories( final List list )
     {
-        this.pluginArtifactRepositories = list;
+        pluginArtifactRepositories = list;
     }
 
     public List getPluginArtifactRepositories()
@@ -898,7 +930,7 @@ public class GoalProjectStub
         return Collections.singletonList( "" );
     }
 
-    public void setActiveProfiles( List list )
+    public void setActiveProfiles( final List list )
     {
         activeProfiles = list;
     }
@@ -908,11 +940,11 @@ public class GoalProjectStub
         return activeProfiles;
     }
 
-    public void addAttachedArtifact( Artifact theArtifact )
+    public void addAttachedArtifact( final Artifact theArtifact )
     {
         if ( attachedArtifacts == null )
         {
-            this.attachedArtifacts = Collections.singletonList( theArtifact );
+            attachedArtifacts = Collections.singletonList( theArtifact );
         }
         else
         {
@@ -925,12 +957,12 @@ public class GoalProjectStub
         return attachedArtifacts;
     }
 
-    public Xpp3Dom getGoalConfiguration( String string, String string1, String string2, String string3 )
+    public Xpp3Dom getGoalConfiguration( final String string, final String string1, final String string2, final String string3 )
     {
         return null;
     }
 
-    public Xpp3Dom getReportConfiguration( String string, String string1, String string2 )
+    public Xpp3Dom getReportConfiguration( final String string, final String string1, final String string2 )
     {
         return null;
     }
@@ -940,18 +972,18 @@ public class GoalProjectStub
         return null;
     }
 
-    public void setExecutionProject( MavenProject mavenProject )
+    public void setExecutionProject( final MavenProject mavenProject )
     {
 
     }
 
-    public void writeModel( Writer writer )
+    public void writeModel( final Writer writer )
         throws IOException
     {
 
     }
 
-    public void writeOriginalModel( Writer writer )
+    public void writeOriginalModel( final Writer writer )
         throws IOException
     {
 
@@ -962,24 +994,24 @@ public class GoalProjectStub
         return dependencyArtifacts;
     }
 
-    public void setDependencyArtifacts( Set set )
+    public void setDependencyArtifacts( final Set set )
     {
-        this.dependencyArtifacts = set;
+        dependencyArtifacts = set;
     }
 
-    public void setReleaseArtifactRepository( ArtifactRepository artifactRepository )
+    public void setReleaseArtifactRepository( final ArtifactRepository artifactRepository )
     {
         // this.releaseArtifactRepository = artifactRepository;
     }
 
-    public void setSnapshotArtifactRepository( ArtifactRepository artifactRepository )
+    public void setSnapshotArtifactRepository( final ArtifactRepository artifactRepository )
     {
         // this.snapshotArtifactRepository = artifactRepository;
     }
 
-    public void setOriginalModel( Model model )
+    public void setOriginalModel( final Model model )
     {
-        this.originalModel = model;
+        originalModel = model;
     }
 
     public Model getOriginalModel()
@@ -992,18 +1024,18 @@ public class GoalProjectStub
         return Collections.singletonList( "" );
     }
 
-    public Set createArtifacts( ArtifactFactory artifactFactory, String string, ArtifactFilter artifactFilter )
+    public Set createArtifacts( final ArtifactFactory artifactFactory, final String string, final ArtifactFilter artifactFilter )
         throws InvalidDependencyVersionException
     {
         return Collections.EMPTY_SET;
     }
 
-    public void addProjectReference( MavenProject mavenProject )
+    public void addProjectReference( final MavenProject mavenProject )
     {
 
     }
 
-    public void attachArtifact( String string, String string1, File theFile )
+    public void attachArtifact( final String string, final String string1, final File theFile )
     {
 
     }
@@ -1028,9 +1060,9 @@ public class GoalProjectStub
         return executionRoot;
     }
 
-    public void setExecutionRoot( boolean b )
+    public void setExecutionRoot( final boolean b )
     {
-        this.executionRoot = b;
+        executionRoot = b;
     }
 
     public String getDefaultGoal()
@@ -1038,7 +1070,7 @@ public class GoalProjectStub
         return defaultGoal;
     }
 
-    public Artifact replaceWithActiveArtifact( Artifact theArtifact )
+    public Artifact replaceWithActiveArtifact( final Artifact theArtifact )
     {
         return null;
     }
