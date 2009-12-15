@@ -136,6 +136,24 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>install-datanucleus-appengine</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>com.google.appengine.orm</groupId>
+                            <artifactId>
+                                datanucleus-appengine
+                            </artifactId>
+                            <version>1.0.4.1</version>
+                            <packaging>jar</packaging>
+                            <file>
+                                ${gae.home}/lib/user/orm/datanucleus-appengine-1.0.4.1.final.jar
+                            </file>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>install-datanucleus-jpa</id>
                         <phase>generate-sources</phase>
                         <goals>
