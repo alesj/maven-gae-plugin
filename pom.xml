@@ -235,8 +235,8 @@
         <!-- Google App Engine Runtime Dependencies -->
         <dependency>
             <groupId>com.google.appengine</groupId>
-            <artifactId>geronimo-jta</artifactId>
-            <version>1.1_spec-1.1.1</version>
+            <artifactId>geronimo-jta_1.1_spec</artifactId>
+            <version>1.1.1</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
