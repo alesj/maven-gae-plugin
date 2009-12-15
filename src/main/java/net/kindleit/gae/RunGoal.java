@@ -18,7 +18,7 @@ import org.apache.maven.plugin.MojoFailureException;
  *         server.
  * @goal run
  * @requiresDependencyResolution runtime
- * @execute phase="test-compile"
+ * @execute phase="package"
  */
 public class RunGoal extends EngineGoalBase {
 
