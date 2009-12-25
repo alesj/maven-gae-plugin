@@ -6,7 +6,7 @@
 	<packaging>maven-plugin</packaging>
 	<version>0.4.3-SNAPSHOT</version>
 	<name>maven-gae-plugin Maven Mojo</name>
-	<url>http://maven.apache.org</url>
+	<url>http://code.google.com/p/maven-gae-plugin/</url>
 
 	<properties>
 		<maven.plugin.version>2.2.1</maven.plugin.version>
