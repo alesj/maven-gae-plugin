@@ -18,43 +18,43 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
+ * Extends the {@link RunGoal} for running the project with a debugger port hook (optionally suspended).
+ * 
  * @author jpeynado@kindleit.net
- * @author rhansen@kindleit.net Goal for run a WAR project on the GAE dev
- *         server.
- * @goal run
+ * @author rhansen@kindleit.net 
+ * @author androns@gmail.com
+ * @goal debug
  * @requiresDependencyResolution runtime
  * @execute phase="package"
  */
-public class RunGoal extends EngineGoalBase {
+public class DebugGoal extends RunGoal {
 
   /** Port to run in.
    *
-   * @parameter expression="${gae.port}" default-value="8080"
+   * @parameter expression="${gae.debugPort}" default-value="8000"
    */
-  protected int port;
+  protected int debugPort;
 
   /** Address to bind to.
    *
-   * @parameter expression="${gae.address}" default-value="0.0.0.0"
+   * @parameter expression="${gae.debugSuspend}" default-value="true"
    */
-  protected String address;
-
-  /** Do not check for new SDK versions.
-  *
-  * @parameter expression="${gae.disableUpdateCheck}" default-value="false"
-  */
-  protected boolean disableUpdateCheck;
+  protected boolean debugSuspend;
 
   public void execute() throws MojoExecutionException, MojoFailureException {
 
     if (disableUpdateCheck) {
       runKickStart("com.google.appengine.tools.development.DevAppServerMain",
-        "--address=" + address, "--port=" + port, "--disable_update_check",
-        appDir);
+        "--address=" + address, "--port=" + port, "--jvm_flag=-Xdebug", 
+        "--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=" + (debugSuspend ? "y" : "n") + 
+        ",address=" + debugPort, 
+        "--disable_update_check", appDir);
 
     } else {
       runKickStart("com.google.appengine.tools.development.DevAppServerMain",
-          "--address=" + address, "--port=" + port, appDir);
+          "--address=" + address, "--port=" + port, "--jvm_flag=-Xdebug", 
+          "--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=" + (debugSuspend ? "y" : "n") + 
+          ",address=" + debugPort, appDir);
     }
   }
 
