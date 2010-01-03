@@ -363,6 +363,10 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+	<organization>
+		<name>KindleIT</name>
+		<url>http://www.kindleit.net</url>
+	</organization> 
 	<developers>
 		<developer>
 			<id>kryptt</id>

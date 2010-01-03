@@ -16,7 +16,5 @@ Google App Engine Maven Plugin (maven-gae-plugin)
  * {{{run-mojo.html}gae:run}} for running project on a local server.
 ~~ * {{{debug-mojo.html}gae:debug}} for running project on a local server in the java debugging mode.
  * {{{update-mojo.html}gae:update}} for uploading project to the Google cloud.
-~~ * {{{deploy-mojo.html}gae:deploy}}
 
- To see the full list of the goals available click on the {{{plugin-info.html}Goals}}.
- 
+ Click {{{plugin-info.html}Goals}} to see the full list of the goals available.
