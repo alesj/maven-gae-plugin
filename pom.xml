@@ -6,7 +6,7 @@
 	<artifactId>maven-gae-plugin</artifactId>
 	<version>0.4.3-SNAPSHOT</version>
 
-	<name>maven-gae-plugin Maven Mojo</name>
+	<name>Maven GAE Plugin</name>
 	<description>Maven plugin for the Google App Engine</description>
 	<url>http://code.google.com/p/maven-gae-plugin/</url>
 	<packaging>maven-plugin</packaging>

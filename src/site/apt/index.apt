@@ -1,0 +1,10 @@
+ ------
+ Introduction
+ ------
+ ------
+
+Google App Engine Maven Plugin (maven-gae-plugin)
+
+ The maven-gae-plugin provides support for {{{http://code.google.com/appengine/}Google App Engine}} projects.
+ Basically, it attempts to cover all the basic operations provided by Google App Engine SDK, such as 
+ running project locally, deploying it to Google's cloud, retrieving production logs etc. 
