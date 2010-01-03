@@ -1,0 +1,28 @@
+ ------
+ Examples
+ ------
+ ------
+
+Usage examples
+
+ In order to get GAE artifacts into your local repository, you need to configure
+ {{{http://maven.apache.org/plugins/maven-dependency-plugin}maven-dependency-plugin}} to download 
+ GAE SDK zip file. After that, you need to install some of SDK's jars to your local repository using
+ {{{http://maven.apache.org/plugins/maven-install-plugin}maven-install-plugin}}.
+ 
+ If you wish to use Google's Big Table as the persistence (And you most likely do), you need to 
+ set up DataNucleus' "enhancement" using the 
+ {{{http://www.datanucleus.org/products/accessplatform_1_0/guides/maven2/index.html}maven-datanucleus-plugin}}.
+ 
+ If you also require GWT, you need to use Codehaus' 
+ {{{http://mojo.codehaus.org/gwt-maven-plugin/index.html}gwt-maven-plugin}}. Please refer their own 
+ site, as they have very well documentation (actually a lots of ideas and pieces for this plugin are
+ borrowed from there).  
+
+ For details, check out the example project sources from SVN:
+
+ * {{{http://maven-gae-plugin.googlecode.com/svn/example/jsp-persistence-app}Plain JSP based example}}
+  
+ * {{{http://maven-gae-plugin.googlecode.com/svn/example/wicket-app}Wicket based example}} 
+ 
+ * {{{http://maven-gae-plugin.googlecode.com/svn/example/gwt-persistence-app}GWT based example}} 
