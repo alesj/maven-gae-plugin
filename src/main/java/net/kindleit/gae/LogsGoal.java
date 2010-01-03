@@ -23,8 +23,9 @@ import org.apache.maven.plugin.MojoFailureException;
 import com.google.appengine.tools.admin.AppCfg;
 
 /**
+ * Retrieves logs from Google's servers.
+ * 
  * @author jpeynado@kindleit.net
- * Goal for run a WAR project on the GAE dev server.
  * @goal logs
  */
 public class LogsGoal extends EngineGoalBase {

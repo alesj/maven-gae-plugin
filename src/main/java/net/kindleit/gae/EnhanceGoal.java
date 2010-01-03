@@ -28,7 +28,8 @@ import org.apache.tools.ant.types.selectors.NotSelector;
 
 import com.google.appengine.tools.enhancer.EnhancerTask;
 
-/** Goal to .
+/** 
+ * Enhances classes.
  *
  * @author rhansen@kindleit.net
  *

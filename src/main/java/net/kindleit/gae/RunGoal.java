@@ -17,10 +17,11 @@ package net.kindleit.gae;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-/**
+/** 
+ * Runs the WAR project locally on the Google App Engine development server.
+ * 
  * @author jpeynado@kindleit.net
- * @author rhansen@kindleit.net Goal for run a WAR project on the GAE dev
- *         server.
+ * @author rhansen@kindleit.net
  * @goal run
  * @requiresDependencyResolution runtime
  * @execute phase="package"

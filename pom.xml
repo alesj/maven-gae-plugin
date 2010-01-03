@@ -401,5 +401,13 @@
 		<system>Google Code</system>
 		<url>http://code.google.com/p/maven-gae-plugin/issues/list</url>
 	</issueManagement>
-
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>2.5.1</version>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

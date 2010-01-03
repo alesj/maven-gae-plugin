@@ -20,8 +20,8 @@
 
     <menu name="Overview">
       <item name="Index" href="index.html"/>
-      <!--
       <item name="Goals" href="plugin-info.html"/>
+      <!--
       <item name="Usage" href="usage.html"/>
       <item name="FAQ" href="faq.html"/>
       -->

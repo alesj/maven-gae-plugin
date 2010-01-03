@@ -18,7 +18,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * Goal to upload a WAR project on Googles servers.
+ * Uploads a WAR project on to Google's servers.
  *
  * @author rhansen@kindleit.net
  *

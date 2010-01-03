@@ -18,8 +18,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
+ * Rolls back an update on the Google's servers.
+ * 
  * @author jpeynado@kindleit.net
- * Goal for run a WAR project on the GAE dev server.
  * @goal rollback
  */
 

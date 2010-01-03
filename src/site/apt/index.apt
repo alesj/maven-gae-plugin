@@ -8,3 +8,15 @@ Google App Engine Maven Plugin (maven-gae-plugin)
  The maven-gae-plugin provides support for {{{http://code.google.com/appengine/}Google App Engine}} projects.
  Basically, it attempts to cover all the basic operations provided by Google App Engine SDK, such as 
  running project locally, deploying it to Google's cloud, retrieving production logs etc. 
+
+* Goals overview
+
+ The most commonly used (and most tested) goals are:
+ 
+ * {{{run-mojo.html}gae:run}} for running project on a local server.
+~~ * {{{debug-mojo.html}gae:debug}} for running project on a local server in the java debugging mode.
+ * {{{update-mojo.html}gae:update}} for uploading project to the Google cloud.
+~~ * {{{deploy-mojo.html}gae:deploy}}
+
+ To see the full list of the goals available click on the {{{plugin-info.html}Goals}}.
+ 

@@ -17,7 +17,8 @@ package net.kindleit.gae;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-/** Output plugin and sdk version information.
+/** 
+ * Prints plugin and SDK version information.
  *
  * @author rhansen@kindleit.net
  *
