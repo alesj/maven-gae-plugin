@@ -2,23 +2,25 @@
 <project name="Maven GAE Plugin">
   <!--
   <bannerLeft>
-    <name>Maven GAE plug-in</name>
+    <name>Maven GAE Plugin</name>
     <src>http://maven.apache.org/images/apache-maven-project.png</src>
-    <href>http://maven.apache.org/</href>
+    <href>http://code.google.com/p/maven-gae-plugin/</href>
   </bannerLeft>
   -->
   <bannerRight>
     <name>Maven GAE Plugin</name>
     <src>images/maven-gae-plugin-logo-small.png</src>
-    <href>http://code.google.com/p/maven-gae-plugin</href>
+    <href>index.html</href>
   </bannerRight>
   <body>
     <links>
-      <item name="Maven" href="http://maven.apache.org/"/>
-      <item name="Google Web Toolkit" href="http://code.google.com/webtoolkit/"/>
+      <item name="Google Web Toolkit" href="http://code.google.com/webtoolkit"/>
       <item name="Google Eclipse Plugin" href="http://code.google.com/intl/en/eclipse"/>
+      <item name="Maven" href="http://maven.apache.org"/>
     </links>
-
+    <menu name="Get Plugin">
+      <item name="Google Code" href="http://code.google.com/p/maven-gae-plugin"/>
+    </menu>
     <menu name="Overview">
       <item name="Index" href="index.html"/>
       <item name="Goals" href="plugin-info.html"/>
@@ -30,19 +32,6 @@
       <item name="Eclipse" href="eclipse/google_plugin.html"/>
     </menu>
     <!--
-    <menu name="User Guide">
-      <item name="Introduction" href="user-guide/introduction.html"/>
-      <item name="Setup" href="user-guide/setup.html"/>
-      <item name="the /war folder" href="user-guide/war-folder.html"/>
-      <item name="Using the archetype" href="user-guide/archetype.html"/>
-      <item name="Run Hosted Mode" href="user-guide/hosted.html"/>
-      <item name="Generate Async" href="user-guide/async.html"/>
-      <item name="Internationalization" href="user-guide/i18n.html"/>
-      <item name="Testing" href="user-guide/testing.html"/>
-      <item name="Compile and Package" href="user-guide/compiler.html"/>
-      <item name="Multi-project setup" href="user-guide/multiproject.html"/>
-      <item name="Writing a GWT library" href="user-guide/library.html"/>
-    </menu>
     <menu name="Examples">
       <item name="compile a GWT module" href="examples/compile.html"/>
       <item name="generate async interfaces" href="examples/asyn.html"/>
