@@ -8,8 +8,9 @@
   </bannerLeft>
   -->
   <bannerRight>
-    <name>KindleIT</name>
-    <!--<src>http://maven.apache.org/images/maven-small.gif</src>-->
+    <name>Maven GAE Plugin</name>
+    <src>images/maven-gae-plugin-logo-small.png</src>
+    <href>http://code.google.com/p/maven-gae-plugin</href>
   </bannerRight>
   <body>
     <links>
@@ -23,6 +24,7 @@
       <item name="Goals" href="plugin-info.html"/>
       <item name="Usage" href="usage.html"/>
       <item name="FAQ" href="faq.html"/>
+      <item name="Examples" href="examples/index.html"/>
     </menu>
     <menu name="IDE integration">
       <item name="Eclipse" href="eclipse/google_plugin.html"/>
