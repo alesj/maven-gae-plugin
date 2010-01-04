@@ -14,6 +14,7 @@
   </bannerRight>
   <body>
     <links>
+      <item name="Google App Engine" href="http://code.google.com/appengine"/>
       <item name="Google Web Toolkit" href="http://code.google.com/webtoolkit"/>
       <item name="Google Eclipse Plugin" href="http://code.google.com/intl/en/eclipse"/>
       <item name="Maven" href="http://maven.apache.org"/>
