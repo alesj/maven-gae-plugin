@@ -14,14 +14,17 @@
  */
 package net.kindleit.gae;
 
+import java.util.ArrayList;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * Extends the {@link RunGoal} for running the project with a debugger port hook (optionally suspended).
- * 
- * @author jpeynado@kindleit.net
- * @author rhansen@kindleit.net 
+ *
+ * It is a simple utility method, as the run goal supports the passing of jvm options in the command line.
+ *
+ * @author rhansen@kindleit.net
  * @author androns@gmail.com
  * @goal debug
  * @requiresDependencyResolution runtime
@@ -41,21 +44,17 @@ public class DebugGoal extends RunGoal {
    */
   protected boolean debugSuspend;
 
+  @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-
-    if (disableUpdateCheck) {
-      runKickStart("com.google.appengine.tools.development.DevAppServerMain",
-        "--address=" + address, "--port=" + port, "--jvm_flag=-Xdebug", 
-        "--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=" + (debugSuspend ? "y" : "n") + 
-        ",address=" + debugPort, 
-        "--disable_update_check", appDir);
-
-    } else {
-      runKickStart("com.google.appengine.tools.development.DevAppServerMain",
-          "--address=" + address, "--port=" + port, "--jvm_flag=-Xdebug", 
-          "--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=" + (debugSuspend ? "y" : "n") + 
-          ",address=" + debugPort, appDir);
+    if (jvmFlags == null) {
+      jvmFlags = new ArrayList<String>(2);
     }
+
+    jvmFlags.add("-Xdebug");
+    jvmFlags.add("-Xrunjdwp:transport=dt_socket,server=y,suspend="
+        + (debugSuspend ? "y" : "n") + ",address=" + debugPort);
+
+    super.execute();
   }
 
 }

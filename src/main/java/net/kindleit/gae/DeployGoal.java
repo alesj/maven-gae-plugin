@@ -22,11 +22,11 @@ import org.apache.maven.plugin.MojoFailureException;
  *
  * @author rhansen@kindleit.net
  *
- * @goal update
+ * @goal deploy
  * @execute phase=package
  * @requiresOnline
  */
-public class UpdateGoal extends EngineGoalBase {
+public class DeployGoal extends EngineGoalBase {
 
   /** Create or update an app version.
    * This goal uploads your web application to the google app engine server.

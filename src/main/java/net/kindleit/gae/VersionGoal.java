@@ -17,7 +17,7 @@ package net.kindleit.gae;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-/** 
+/**
  * Prints plugin and SDK version information.
  *
  * @author rhansen@kindleit.net
@@ -27,10 +27,10 @@ import org.apache.maven.plugin.MojoFailureException;
 public class VersionGoal extends EngineGoalBase {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
-    getLog().info("maven-gae-plugin version: " + PLUGIN_VERSION);
+    getLog().info("Plugin version: " + gaeProperties.getProperty("version"));
+    getLog().info("SDK directory: " + sdkDir);
+    getLog().info("SDK version:");
     runAppCfg("version");
   }
 
 }
-
-

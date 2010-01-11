@@ -15,11 +15,14 @@
 package net.kindleit.gae;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
 
@@ -31,7 +34,8 @@ import com.google.appengine.tools.admin.AppCfg;
  * @author rhansen@kindleit.net
  */
 public abstract class EngineGoalBase extends AbstractMojo {
-  public static final String PLUGIN_VERSION="0.4.1";
+
+  private static final String GAE_PROPS = "gae.properties";
 
   protected static final String[] ARG_TYPE = new String[0];
 
@@ -60,7 +64,7 @@ public abstract class EngineGoalBase extends AbstractMojo {
 
   /** Specifies where the Google App Engine SDK is located.
   *
-  * @parameter expression="${appengine.sdk.root}" default-value="${project.build.directory}/appEngine"
+  * @parameter expression="${gae.home}" default-value="${settings.localRepository}/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}"
   * @required
   */
  protected String sdkDir;
@@ -101,14 +105,26 @@ public abstract class EngineGoalBase extends AbstractMojo {
    */
   protected boolean passIn;
 
+  protected Properties gaeProperties;
+
+  public EngineGoalBase() {
+    gaeProperties = new Properties();
+    try {
+      gaeProperties.load(EngineGoalBase.class.getResourceAsStream(GAE_PROPS));
+    } catch (final IOException e) {
+      throw new RuntimeException("Unable to load version", e);
+    }
+  }
+
 
   /** Passes command to the Google App Engine AppCfg runner.
   *
   * @param command command to run through AppCfg
   * @param commandArguments arguments to the AppCfg command.
+   * @throws MojoExecutionException If {@link #assureSystemProperties()} fails
   */
   protected final void runAppCfg(final String command,
-      final String ... commandArguments) {
+      final String ... commandArguments) throws MojoExecutionException {
 
     final List<String> args = new ArrayList<String>();
     args.addAll(getAppCfgArgs());
@@ -122,9 +138,10 @@ public abstract class EngineGoalBase extends AbstractMojo {
   *
   * @param startClass command to run through KickStart
   * @param commandArguments arguments to the KickStart command.
+  * @throws MojoExecutionException If {@link #assureSystemProperties()} fails
   */
   protected final void runKickStart(final String startClass,
-    final String ... commandArguments) {
+    final String ... commandArguments) throws MojoExecutionException {
 
     final List<String> args = new ArrayList<String>();
     args.add(startClass);
@@ -140,13 +157,25 @@ public abstract class EngineGoalBase extends AbstractMojo {
 
 
   /** Groups alterations to System properties for the proper execution
-   * of the actual GAE code. */
-  protected void assureSystemProperties() {
+   * of the actual GAE code.
+   * @throws MojoExecutionException When the gae.home variable cannot be set. */
+  protected void assureSystemProperties() throws MojoExecutionException {
     // explicitly specify SDK root, as auto-discovery fails when
     // appengine-tools-api.jar is loaded from Maven repo, not SDK
-    if (System.getProperty("appengine.sdk.root") == null) {
-        System.setProperty("appengine.sdk.root", sdkDir);
+    String sdk = System.getProperty("appengine.sdk.root");
+    if (sdk == null) {
+      if (sdkDir == null) {
+        throw new MojoExecutionException(this, "${gae.home} property not set",
+            gaeProperties.getProperty("hone_undefined"));
+      }
+      System.setProperty("appengine.sdk.root", sdk = sdkDir);
     }
+
+    if (!new File(sdk).isDirectory()) {
+      throw new MojoExecutionException(this, "${gae.home} is not a directory",
+          gaeProperties.getProperty("home_invalid"));
+    }
+
 
     // hack for getting appengine-tools-api.jar on a runtime classpath
     // (KickStart checks java.class.path system property for classpath entries)
