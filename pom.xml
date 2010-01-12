@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>net.kindleit</groupId>
 	<artifactId>maven-gae-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>0.5.0-SNAPSHOT</version>
+	<version>0.5.0</version>
 
 	<name>Maven GAE Plugin</name>
 	<description>Maven plugin for the Google App Engine</description>
@@ -94,33 +93,6 @@
       </extension>
     </extensions>
 		<plugins>
-      <!-- Unpacking of GAE SDK... 
-        Needed for the gae.home property.. -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>unpack</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>com.google.appengine</groupId>
-                  <artifactId>appengine-java-sdk</artifactId>
-                  <version>${gae.version}</version>
-                  <type>zip</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${gae.base}</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -131,13 +103,21 @@
 					<showWarnings>true</showWarnings>
 				</configuration>
 			</plugin>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.0-beta-9</version>
+        <configuration>
+          <releaseProfiles>release</releaseProfiles>
+          <goals>deploy</goals>
+        </configuration>
+      </plugin>
 		</plugins>
 	</build>
 
 	<scm>
-		<connection>scm:svn:http://maven-gae-plugin.googlecode.com/svn/trunk/</connection>
-		<developerConnection>scm:svn:https://maven-gae-plugin.googlecode.com/svn/trunk/</developerConnection>
-		<url>http://code.google.com/p/maven-gae-plugin/source/browse/</url>
+		<connection>scm:svn:http://maven-gae-plugin.googlecode.com/svn/tags/0.5.0</connection>
+		<developerConnection>scm:svn:https://maven-gae-plugin.googlecode.com/svn/tags/0.5.0</developerConnection>
+		<url>http://code.google.com/p/maven-gae-plugin/source/browse/tags/0.5.0</url>
 	</scm>
 
 	<repositories>
@@ -148,6 +128,13 @@
         <releases><enabled>true</enabled></releases>
         <snapshots><enabled>true</enabled></snapshots>
       </repository>
+      <repository>
+        <id>maven2-repository.dev.java.net</id>
+        <name>Java.net Repository for Maven</name>
+        <url>http://download.java.net/maven/2/</url>
+        <releases><enabled>true</enabled></releases>
+        <snapshots><enabled>true</enabled></snapshots>
+    </repository>   
 	</repositories>
 
 	<distributionManagement>
@@ -155,146 +142,141 @@
     <repository>
 			<id>maven-gae-deploy</id>
       <uniqueVersion>false</uniqueVersion>
-      <url>svn:https://wicket-tree.googlecode.com/svn/repository</url>
+      <url>svn:https://maven-gae-plugin.googlecode.com/svn/repository</url>
     </repository>
 	</distributionManagement>
 
-	<dependencies>
-        <!-- Google App Engine API -->
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-1.0-sdk</artifactId>
-            <version>${gae.version}</version>
-        </dependency>
-        
-        <dependency>
+  <dependencies>
+    <!-- Google App Engine API -->
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-1.0-sdk</artifactId>
+      <version>${gae.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-archiver</artifactId>
+      <version>1.0-alpha-11</version>
+      <exclusions>
+        <exclusion>
           <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-archiver</artifactId>
-          <version>1.0-alpha-11</version>
-          <exclusions>
-            <exclusion>
-              <groupId>org.codehaus.plexus</groupId>
-              <artifactId>plexus-container-default</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.codehaus.plexus</groupId>
-              <artifactId>plexus-component-api</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
+          <artifactId>plexus-container-default</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-component-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
-        <!-- Google App Engine Runtime Dependencies -->
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>geronimo-jta_1.1_spec</artifactId>
-            <version>1.1.1</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>jdo2-api</artifactId>
-            <version>2.3-eb</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>geronimo-jpa_3.0_spec</artifactId>
-            <version>1.1.1</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.appengine.orm</groupId>
-            <artifactId>datanucleus-appengine</artifactId>
-            <version>1.0.4.1</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <!--<groupId>com.google.appengine</groupId>-->
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-core</artifactId>
-            <version>1.1.5</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.transaction</groupId>
-                    <artifactId>transaction-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+    <!-- Google App Engine Runtime Dependencies -->
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>geronimo-jta_1.1_spec</artifactId>
+      <version>1.1.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>jdo2-api</artifactId>
+      <version>2.3-eb</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>geronimo-jpa_3.0_spec</artifactId>
+      <version>1.1.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.appengine.orm</groupId>
+      <artifactId>datanucleus-appengine</artifactId>
+      <version>1.0.4.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <!--<groupId>com.google.appengine</groupId>-->
+      <groupId>org.datanucleus</groupId>
+      <artifactId>datanucleus-core</artifactId>
+      <version>1.1.5</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.transaction</groupId>
+          <artifactId>transaction-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
-        <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.1</version>
-            <scope>runtime</scope>
-        </dependency>
+    <dependency>
+      <groupId>javax.transaction</groupId>
+      <artifactId>jta</artifactId>
+      <version>1.1</version>
+      <scope>runtime</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>datanucleus-jpa</artifactId>
-            <version>1.1.5</version>
-            <scope>runtime</scope>
-        </dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>datanucleus-jpa</artifactId>
+      <version>1.1.5</version>
+      <scope>runtime</scope>
+    </dependency>
 
-        <!-- App Engine Development Classes -->
-        <!--
-            <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-stubs</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>
-            ${gae.home}/lib/impl/appengine-api-stubs.jar
-            </systemPath>
-            </dependency>
-            <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-local-runtime</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>
-            ${gae.home}/lib/impl/appengine-local-runtime.jar
-            </systemPath>
-            </dependency>
-        -->
-		<dependency>
-		    <groupId>org.apache.ant</groupId>
-		    <artifactId>ant</artifactId>
-		    <version>${ant.version}</version>
-		</dependency>
+    <!-- App Engine Development Classes -->
+    <!--
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-stubs</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${gae.home}/lib/impl/appengine-api-stubs.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-local-runtime</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${gae.home}/lib/impl/appengine-local-runtime.jar</systemPath>
+    </dependency>
+    -->
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>${ant.version}</version>
+    </dependency>
 
-		<dependency>
-		    <groupId>org.apache.ant</groupId>
-		    <artifactId>ant-launcher</artifactId>
-		    <version>${ant.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant-launcher</artifactId>
+      <version>${ant.version}</version>
+    </dependency>
 
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-tools-api</artifactId>
-            <version>1.0</version>
-        </dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-tools-api</artifactId>
+      <version>1.0</version>
+    </dependency>
 
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-project</artifactId>
-			<version>${maven.plugin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-plugin-api</artifactId>
-			<version>${maven.plugin.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+      <version>${maven.plugin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>${maven.plugin.version}</version>
+    </dependency>
 
-        <!-- TODO there are no tests yet
-            <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-            </dependency>
-        -->
-
-	</dependencies>
+    <!-- TODO there are no tests yet
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope> 
+    </dependency>
+    -->
+  </dependencies>
   
 	<reporting>
 		<plugins>
@@ -305,4 +287,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
+
 </project>
