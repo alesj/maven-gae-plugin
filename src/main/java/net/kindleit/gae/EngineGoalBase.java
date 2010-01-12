@@ -15,56 +15,29 @@
 package net.kindleit.gae;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
-import org.codehaus.plexus.archiver.ArchiverException;
-import org.codehaus.plexus.archiver.UnArchiver;
-import org.codehaus.plexus.archiver.manager.ArchiverManager;
-import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
 
-import sun.misc.JarFilter;
+import com.google.appengine.tools.KickStart;
+import com.google.appengine.tools.admin.AppCfg;
 
 /** Base MOJO class for working with the Google App Engine SDK.
  *
  * @author rhansen@kindleit.net
- * @requiresProject true
  */
 public abstract class EngineGoalBase extends AbstractMojo {
-  public static final String PLUGIN_VERSION="0.9";
+
+  private static final String GAE_PROPS = "gae.properties";
 
   protected static final String[] ARG_TYPE = new String[0];
-
-  protected static final String APPENGINE_ARTIFACTID = "appengine-java-sdk";
-  protected static final String APPENGINE_GROUPID = "com.google.appengine";
-
-  protected static final String APPCFG_CLASS =
-    "com.google.appengine.tools.admin.AppCfg";
-  protected static final String KICKSTART_CLASS =
-    "com.google.appengine.tools.admin.KickStart";
-
-  protected static final String SDK_LIBS_NOTFOUND =
-    "AppEngine tools SDK could not be found";
-  protected static final String SDK_APPCFG_NOTFOUND =
-    "AppCfg Class not found at: " + APPCFG_CLASS;
-  protected static final String SDK_KICKSTART_NOTFOUND =
-    "KickStart Class not found at: " + KICKSTART_CLASS;
-
-  private static URLClassLoader classLoader;
-
 
   /** The Maven project reference.
    *
@@ -75,53 +48,12 @@ public abstract class EngineGoalBase extends AbstractMojo {
   protected MavenProject project;
 
   /** The Maven settings reference.
-   *
-   * @parameter expression="${settings}"
-   * @required
-   * @readonly
-   */
-  protected Settings settings;
-
-  /**
-   * Location of the local repository.
-   *
-   * @parameter expression="${localRepository}"
-   * @readonly
-   * @required
-   */
-  protected ArtifactRepository local;
-
-  /**
-   * List of Remote Repositories used by the resolver
-   *
-   * @parameter expression="${project.remoteArtifactRepositories}"
-   * @readonly
-   * @required
-   */
-  protected List<?> remoteRepos;
-
-
-  /**
-   * Used to look up Artifacts in the remote repository.
-   *
-   * @component
-   */
-  protected org.apache.maven.artifact.factory.ArtifactFactory factory;
-
-  /**
-   * Used to look up Artifacts in the remote repository.
-   *
-   * @component
-   */
-  protected ArtifactResolver resolver;
-
-  /**
-   * To look up Archiver/UnArchiver implementations
-   *
-   * @component
-   */
-  protected ArchiverManager archiverManager;
-
+  *
+  * @parameter expression="${settings}"
+  * @required
+  * @readonly
+  */
+ protected Settings settings;
 
   /** Overrides where the Project War Directory is located.
    *
@@ -131,18 +63,11 @@ public abstract class EngineGoalBase extends AbstractMojo {
   protected String appDir;
 
   /** Specifies where the Google App Engine SDK is located.
-   *
-   * @parameter expression="${appengine.sdk.root}" default-value="${project.build.directory}/appEngine"
-   * @required
-   */
-  protected String sdkDir;
-
-  /** Version of the Google App Engine to use.
   *
-  * @parameter expression="${gae.version}" default-value="1.2.6"
+  * @parameter expression="${gae.home}" default-value="${settings.localRepository}/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}"
   * @required
   */
-  protected String gaeVersion;
+ protected String sdkDir;
 
   /** Split large jar files (> 10M) into smaller fragments.
    *
@@ -180,13 +105,15 @@ public abstract class EngineGoalBase extends AbstractMojo {
    */
   protected boolean passIn;
 
+  protected Properties gaeProperties;
 
-  /**
-   * @return Returns the project.
-   */
-  public MavenProject getProject ()
-  {
-      return project;
+  public EngineGoalBase() {
+    gaeProperties = new Properties();
+    try {
+      gaeProperties.load(EngineGoalBase.class.getResourceAsStream(GAE_PROPS));
+    } catch (final IOException e) {
+      throw new RuntimeException("Unable to load version", e);
+    }
   }
 
 
@@ -194,7 +121,7 @@ public abstract class EngineGoalBase extends AbstractMojo {
   *
   * @param command command to run through AppCfg
   * @param commandArguments arguments to the AppCfg command.
-   * @throws MojoExecutionException
+   * @throws MojoExecutionException If {@link #assureSystemProperties()} fails
   */
   protected final void runAppCfg(final String command,
       final String ... commandArguments) throws MojoExecutionException {
@@ -203,22 +130,16 @@ public abstract class EngineGoalBase extends AbstractMojo {
     args.addAll(getAppCfgArgs());
     args.add(command);
     args.addAll(Arrays.asList(commandArguments));
-
-    try {
-      getEngineClass(APPCFG_CLASS, SDK_APPCFG_NOTFOUND)
-        .getMethod("main", String[].class)
-          .invoke(null, (Object) args.toArray(ARG_TYPE));
-    } catch (final Exception e) {
-      throw new MojoExecutionException("Unable to execute AppCfg command: " + command, e);
-    }
+    assureSystemProperties();
+    AppCfg.main(args.toArray(ARG_TYPE));
   }
 
   /** Passes command to the Google App Engine KickStart runner.
-   *
-   * @param startClass command to run through KickStart
-   * @param commandArguments arguments to the KickStart command.
-   * @throws MojoExecutionException
-   */
+  *
+  * @param startClass command to run through KickStart
+  * @param commandArguments arguments to the KickStart command.
+  * @throws MojoExecutionException If {@link #assureSystemProperties()} fails
+  */
   protected final void runKickStart(final String startClass,
     final String ... commandArguments) throws MojoExecutionException {
 
@@ -227,12 +148,42 @@ public abstract class EngineGoalBase extends AbstractMojo {
     args.addAll(getCommonArgs());
     args.addAll(Arrays.asList(commandArguments));
 
-    try {
-      getEngineClass(KICKSTART_CLASS, SDK_KICKSTART_NOTFOUND)
-        .getMethod("main", String[].class)
-          .invoke(null, (Object) args.toArray(ARG_TYPE));
-    } catch (final Exception e) {
-      throw new MojoExecutionException("Unable to execute Kickstart class: " + startClass, e);
+    assureSystemProperties();
+    KickStart.main(args.toArray(ARG_TYPE));
+  }
+
+
+
+
+
+  /** Groups alterations to System properties for the proper execution
+   * of the actual GAE code.
+   * @throws MojoExecutionException When the gae.home variable cannot be set. */
+  protected void assureSystemProperties() throws MojoExecutionException {
+    // explicitly specify SDK root, as auto-discovery fails when
+    // appengine-tools-api.jar is loaded from Maven repo, not SDK
+    String sdk = System.getProperty("appengine.sdk.root");
+    if (sdk == null) {
+      if (sdkDir == null) {
+        throw new MojoExecutionException(this, "${gae.home} property not set",
+            gaeProperties.getProperty("hone_undefined"));
+      }
+      System.setProperty("appengine.sdk.root", sdk = sdkDir);
+    }
+
+    if (!new File(sdk).isDirectory()) {
+      throw new MojoExecutionException(this, "${gae.home} is not a directory",
+          gaeProperties.getProperty("home_invalid"));
+    }
+
+
+    // hack for getting appengine-tools-api.jar on a runtime classpath
+    // (KickStart checks java.class.path system property for classpath entries)
+    final String classpath = System.getProperty("java.class.path");
+    final String toolsJar = sdkDir + "/lib/appengine-tools-api.jar";
+    if (!classpath.contains(toolsJar)) {
+      System.setProperty("java.class.path",
+          classpath + File.pathSeparator + toolsJar);
     }
   }
 
@@ -276,106 +227,6 @@ public abstract class EngineGoalBase extends AbstractMojo {
       final String var) {
     if (var != null && var.length() > 0) {
       args.add(key + var);
-    }
-  }
-
-  protected Class<?> getEngineClass(final String clsName,
-      final String clsErrorMsg) throws MojoExecutionException {
-    try {
-      return getClassLoader().loadClass(clsName);
-    } catch (final ClassNotFoundException e) {
-      throw new MojoExecutionException(clsErrorMsg, e);
-    }
-  }
-
-  private ClassLoader getClassLoader() throws MojoExecutionException {
-    synchronized (EngineGoalBase.class) {
-      if (classLoader != null) {
-        return classLoader;
-      }
-    }
-    synchronized (EngineGoalBase.class) {
-      try {
-        final List<URL> urls = new ArrayList<URL>();
-
-        for(final File jar : getSdkLibDir().listFiles(new JarFilter())) {
-          urls.add(jar.toURI().toURL());
-        }
-
-        classLoader = new URLClassLoader(urls.toArray(new URL[0]));
-      } catch (final MalformedURLException e) {
-        throw new MojoExecutionException(SDK_LIBS_NOTFOUND, e);
-      }
-      return classLoader;
-    }
-  }
-
-  private File getSdkLibDir() throws MojoExecutionException {
-    final File sdkLibDir = new File(sdkDir);
-    if (!sdkLibDir.exists()) {
-      unpackSDK(sdkLibDir);
-    }
-    return sdkLibDir;
-  }
-
-  /**
-   * This method gets the Artifact object and calls DependencyUtil.unpackFile.
-   *
-   * @param artifactItem
-   *            containing the information about the Artifact to unpack.
-   *
-   * @throws MojoExecutionException
-   *             with a message if an error occurs.
-   *
-   * @see #getArtifact
-   * @see DependencyUtil#unpackFile(Artifact, File, File, ArchiverManager,
-   *      Log)
-   */
-  private void unpackSDK (final File sdkLibDir) throws MojoExecutionException {
-    Artifact sdkArtifact;
-    try {
-      sdkArtifact =
-          factory.createArtifact(APPENGINE_GROUPID, APPENGINE_ARTIFACTID,
-              gaeVersion, "compile", "zip");
-
-      resolver.resolveAlways(sdkArtifact, remoteRepos, local);
-
-    } catch ( final ArtifactResolutionException e ) {
-      throw new MojoExecutionException( "Unable to resolve artifact.", e );
-
-    } catch ( final ArtifactNotFoundException e ) {
-      throw new MojoExecutionException( "Unable to find artifact.", e );
-    }
-    unpack(sdkArtifact.getFile(), sdkLibDir);
-  }
-
-  /** Unpacks the archive file.
-   *
-   * @param file File to be unpacked.
-   * @param location Location where to put the unpacked files.
-   */
-  private void unpack (final File file, final File location)
-  throws MojoExecutionException {
-    try {
-      getLog().info("Unpacking " + file.getPath()
-          + " to\n  " + location.getPath());
-
-      location.mkdirs();
-
-      UnArchiver unArchiver;
-      unArchiver = archiverManager.getUnArchiver(file);
-      unArchiver.setSourceFile(file);
-      unArchiver.setDestDirectory(location);
-      unArchiver.extract();
-
-    } catch (final NoSuchArchiverException e) {
-      throw new MojoExecutionException("Unknown archiver type", e);
-
-    } catch (final ArchiverException e) {
-      e.printStackTrace();
-      throw new MojoExecutionException("Error unpacking file: " + file
-                                       + " to: " + location + "\r\n"
-                                       + e.toString(), e);
     }
   }
 

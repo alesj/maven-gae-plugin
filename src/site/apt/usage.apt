@@ -1,0 +1,46 @@
+ ------
+Maven GAE Plugin Usage
+ ------
+ ------
+ ------
+
+Configuring Maven GAE Plugin
+
+ The basic thing to do is to add following configuration to your pom.xml:
+
++---+
+<project>
+  [...]
+  <build>
+    <plugins>
+      [...]
+      <plugin>
+        <groupId>net.kindleit</groupId>
+        <artifactId>maven-gae-plugin</artifactId>
+        <version>[plugin version]</version>
+        <configuration>
+          <sdkDir>${gae.home}</sdkDir>
+        </configuration>
+      </plugin>
+      [...]
+    </plugins>
+  </build>
+  [...]
+  <properties>
+    <gae.home>path_to_the_appengine-java-sdk</gae.home>
+  </propeties>
+  [...]
+</project>
++---+
+
+ However, currently, GAE SDK (and thus maven-gae-plugin) require some artifacts, which are not 
+ available in any of the public repositories 'as is'. So the workaround is to configure your
+ project's pom, so that Maven would download the GAE SDK zip file, unpack it and install some of
+ it's jars to your local Maven repository (We do plan to automate this at some point, but it's a lot
+ of work, besides GAE is still in beta and is changing all the time).
+ 
+ So, for now, our best solution is to provide few {{{examples/index.html}example projects}}, 
+ from which you can copy/paste the pieces of pom.xml required for doing that.
+ 
+ We are also working on changing the example projects into Maven Archetypes, so you could just
+ generate all the ugly stuff for the new projects (and then, hopefully, remove it in future).

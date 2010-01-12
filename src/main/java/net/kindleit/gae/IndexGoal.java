@@ -18,8 +18,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
+ * Updates datastore indexes.
+ *
  * @author jpeynado@kindleit.net
- * Goal for run a WAR project on the GAE dev server.
  *
  * @goal update-indexes
  * @executionStrategy once-per-session

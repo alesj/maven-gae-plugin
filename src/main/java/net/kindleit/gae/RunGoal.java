@@ -14,32 +14,38 @@
  */
 package net.kindleit.gae;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.StringUtils;
 
-/** Goal for run a WAR project on the GAE dev  server.
+/**
+ * Runs the WAR project locally on the Google App Engine development server.
  *
- * @author jpeynado@kindleit.net
+ * You can specify jvm flags via the jvmFlags in the configuration section.
+ *
  * @author rhansen@kindleit.net
- *
  * @goal run
- * @requiresProject true
  * @requiresDependencyResolution runtime
- * @execute phase="test-compile"
+ * @execute phase="package"
  */
 public class RunGoal extends EngineGoalBase {
+
+  private static final String JVM_FLAG = " --jvm_flag=";
 
   /** Port to run in.
    *
    * @parameter expression="${gae.port}" default-value="8080"
    */
-  private String port;
+  protected int port;
 
   /** Address to bind to.
    *
    * @parameter expression="${gae.address}" default-value="0.0.0.0"
    */
-  private String address;
+  protected String address;
 
   /** Do not check for new SDK versions.
   *
@@ -47,17 +53,27 @@ public class RunGoal extends EngineGoalBase {
   */
   protected boolean disableUpdateCheck;
 
+  /** Arbitrary list of JVM Flags to send to the KickStart task.
+   *
+   * @parameter
+   */
+  protected List<String> jvmFlags;
+
   public void execute() throws MojoExecutionException, MojoFailureException {
+    final List<String> arguments = new ArrayList<String>();
 
+    arguments.add("--address=" + address);
+    arguments.add("--port=" + port);
     if (disableUpdateCheck) {
-      runKickStart("com.google.appengine.tools.development.DevAppServerMain",
-        "--address=" + address, "--port=" + port, "--disable_update_check",
-        appDir);
-
-    } else {
-      runKickStart("com.google.appengine.tools.development.DevAppServerMain",
-          "--address=" + address, "--port=" + port, appDir);
+      arguments.add("--disable_update_check");
     }
+    if (jvmFlags != null) {
+      arguments.add(JVM_FLAG + StringUtils.join(jvmFlags.iterator(), JVM_FLAG));
+    }
+    arguments.add(appDir);
+
+    runKickStart("com.google.appengine.tools.development.DevAppServerMain",
+        arguments.toArray(new String[] {}));
   }
 
 }

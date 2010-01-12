@@ -26,19 +26,16 @@ import org.apache.tools.ant.types.selectors.AndSelector;
 import org.apache.tools.ant.types.selectors.FilenameSelector;
 import org.apache.tools.ant.types.selectors.NotSelector;
 
-/** Goal to .
+import com.google.appengine.tools.enhancer.EnhancerTask;
+
+/** 
+ * Enhances classes.
  *
  * @author rhansen@kindleit.net
  *
  * @goal enhance
  */
 public class EnhanceGoal extends EngineGoalBase {
-
-  protected static String ENHANCE_CLS =
-    "com.google.appengine.tools.enhancer.EnhancerTask";
-  protected static final String SDK_ENHANCE_NOTFOUND =
-    "Enhance class not found in gae classpath";
-
 
   /** Fileset to augment.
    * @parameter
@@ -59,27 +56,22 @@ public class EnhanceGoal extends EngineGoalBase {
 
     getLog().info("Enhancing DataNucleus Clases...");
 
-    final Project prj = new Project();
-    prj.init();
+    final Project pj = new Project();
+      pj.init();
+
+    final EnhancerTask ehTask = new EnhancerTask();
 
     final FileSet fs = new FileSet();
     fs.setDir(enhanceFolder);
     addExcludes(fs);
     addIncludes(fs);
 
-    final Class<?> ehClass = getEngineClass(ENHANCE_CLS, SDK_ENHANCE_NOTFOUND);
-
-    Object eh;
-    try {
-      eh = ehClass.getConstructor().newInstance();
-      ehClass.getMethod("setProject", Project.class).invoke(eh, prj);
-      ehClass.getMethod("addFileSet", FileSet.class).invoke(eh, fs);
-      ehClass.getMethod("setEnhancerName", String.class).invoke(eh, "enhance");
-      ehClass.getMethod("execute").invoke(eh);
-    } catch (final Exception e) {
-      throw new MojoFailureException("Could not enhance libraries", e);
-    }
+    ehTask.setProject(pj);
+    ehTask.addFileSet(fs);
+    ehTask.setEnhancerName("enhance");
+    ehTask.execute();
   }
+
 
   private void addIncludes(final FileSet fs) {
     final AndSelector fsIncludes = new AndSelector();
@@ -114,6 +106,5 @@ public class EnhanceGoal extends EngineGoalBase {
       fs.addNot(fsExcludes);
     }
   }
+
 }
-
-

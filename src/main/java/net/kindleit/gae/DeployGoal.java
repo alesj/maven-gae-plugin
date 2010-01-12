@@ -14,31 +14,29 @@
  */
 package net.kindleit.gae;
 
-import java.io.File;
-
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.testing.AbstractMojoTestCase;
+import org.apache.maven.plugin.MojoFailureException;
 
-public class RunGoalTest extends AbstractMojoTestCase {
+/**
+ * Uploads a WAR project on to Google's servers.
+ *
+ * @author rhansen@kindleit.net
+ *
+ * @goal deploy
+ * @execute phase=package
+ * @requiresOnline
+ */
+public class DeployGoal extends EngineGoalBase {
 
-  RunGoal mojo;
-
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-    final File pom = new File(getBasedir(), "target/test-classes/testPom.xml");
-    assertTrue(pom.exists());
-
-    mojo = (RunGoal) lookupMojo("run", pom);
-    assertNotNull(mojo);
-    assertNotNull(mojo.getProject());
+  /** Create or update an app version.
+   * This goal uploads your web application to the google app engine server.
+   * @throws MojoExecutionException Unthrown
+   * @throws MojoFailureException Unthrown
+   */
+  public void execute() throws MojoExecutionException, MojoFailureException {
+    getLog().info("Updating Google App Engine Server...");
+    runAppCfg("update", appDir);
   }
-
-  public void testGetEngineClass() throws MojoExecutionException {
-    mojo.gaeVersion = "1.2.1";
-    mojo.getEngineClass(EngineGoalBase.APPCFG_CLASS,
-        EngineGoalBase.SDK_APPCFG_NOTFOUND);
-  }
-
 }
+
 

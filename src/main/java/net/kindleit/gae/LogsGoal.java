@@ -20,11 +20,13 @@ import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
+import com.google.appengine.tools.admin.AppCfg;
+
 /**
+ * Retrieves logs from Google's servers.
+ * 
  * @author jpeynado@kindleit.net
- * Goal for run a WAR project on the GAE dev server.
  * @goal logs
- * @requiresOnline true
  */
 public class LogsGoal extends EngineGoalBase {
 
@@ -58,13 +60,8 @@ public class LogsGoal extends EngineGoalBase {
     args.add(appDir);
     args.add(outputFile.toString());
 
-    try {
-      getEngineClass(APPCFG_CLASS, SDK_APPCFG_NOTFOUND)
-        .getMethod("main", String[].class)
-          .invoke(null, (Object) args.toArray(ARG_TYPE));
-    } catch (final Exception e) {
-      throw new MojoExecutionException("Unable to generate application logs", e);
-    }
+    assureSystemProperties();
+    AppCfg.main(args.toArray(ARG_TYPE));
   }
 }
 
