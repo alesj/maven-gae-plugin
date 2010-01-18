@@ -27,7 +27,10 @@ import org.codehaus.plexus.archiver.manager.ArchiverManager;
 import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
 
 /**
- * Prints plugin and SDK version information.
+ * Downloads and unzips the SDK to your maven repository. Use this goal, if you don't wish to
+ * specify a <i>gae.home</i> or <i>-Dappegine.sdk.home property</i>. The plugin will now search for
+ * the SDK in that default location.
+ * 
  * @author rhansen@kindleit.net
  * @goal unpack
  */
