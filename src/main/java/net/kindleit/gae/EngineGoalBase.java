@@ -166,7 +166,7 @@ public abstract class EngineGoalBase extends AbstractMojo {
     if (sdk == null) {
       if (sdkDir == null) {
         throw new MojoExecutionException(this, "${gae.home} property not set",
-            gaeProperties.getProperty("hone_undefined"));
+            gaeProperties.getProperty("home_undefined"));
       }
       System.setProperty("appengine.sdk.root", sdk = sdkDir);
     }
