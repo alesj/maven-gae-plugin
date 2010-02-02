@@ -105,6 +105,12 @@ public abstract class EngineGoalBase extends AbstractMojo {
    */
   protected boolean passIn;
 
+  /** Tell AppCfg to use a proxy.
+   *
+   * @parameter expression="${gae.proxy}"
+   */
+  protected String proxy;
+
   protected Properties gaeProperties;
 
   public EngineGoalBase() {
@@ -200,6 +206,7 @@ public abstract class EngineGoalBase extends AbstractMojo {
 
     addStringOption(args, "--email=", emailAccount);
     addStringOption(args, "--host=", hostString);
+    addStringOption(args, "--proxy=", proxy);
     addBooleanOption(args, "--passin", passIn);
     addBooleanOption(args, "--enable_jar_splitting", splitJars);
     addBooleanOption(args, "--retain_upload_dir", keepTempUploadDir);
