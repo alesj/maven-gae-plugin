@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.StringUtils;
 
 /**
  * Runs the WAR project locally on the Google App Engine development server.
@@ -32,8 +31,6 @@ import org.codehaus.plexus.util.StringUtils;
  * @execute phase="package"
  */
 public class RunGoal extends EngineGoalBase {
-
-  private static final String JVM_FLAG = " --jvm_flag=";
 
   /** Port to run in.
    *
@@ -67,8 +64,8 @@ public class RunGoal extends EngineGoalBase {
     if (disableUpdateCheck) {
       arguments.add("--disable_update_check");
     }
-    if (jvmFlags != null) {
-      arguments.add(JVM_FLAG + StringUtils.join(jvmFlags.iterator(), JVM_FLAG));
+    for (final String jvmFlag : jvmFlags) {
+      arguments.add("--jvm_flag=" + jvmFlag);
     }
     arguments.add(appDir);
 
