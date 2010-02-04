@@ -54,7 +54,7 @@ public class RunGoal extends EngineGoalBase {
    *
    * @parameter
    */
-  protected List<String> jvmFlags = new ArrayList<String>();
+  protected List<String> jvmFlags;
 
   public void execute() throws MojoExecutionException, MojoFailureException {
     final List<String> arguments = new ArrayList<String>();
@@ -64,8 +64,10 @@ public class RunGoal extends EngineGoalBase {
     if (disableUpdateCheck) {
       arguments.add("--disable_update_check");
     }
-    for (final String jvmFlag : jvmFlags) {
-      arguments.add("--jvm_flag=" + jvmFlag);
+    if (jvmFlags != null) {
+      for (final String jvmFlag : jvmFlags) {
+        arguments.add("--jvm_flag=" + jvmFlag);
+      }
     }
     arguments.add(appDir);
 
