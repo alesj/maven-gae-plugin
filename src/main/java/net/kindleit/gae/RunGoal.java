@@ -54,7 +54,7 @@ public class RunGoal extends EngineGoalBase {
    *
    * @parameter
    */
-  protected List<String> jvmFlags;
+  protected List<String> jvmFlags = new ArrayList<String>();
 
   public void execute() throws MojoExecutionException, MojoFailureException {
     final List<String> arguments = new ArrayList<String>();
