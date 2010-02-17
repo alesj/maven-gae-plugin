@@ -194,7 +194,7 @@
     <dependency>
       <groupId>com.google.appengine.orm</groupId>
       <artifactId>datanucleus-appengine</artifactId>
-      <version>1.0.5</version>
+      <version>1.0.5.final</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
