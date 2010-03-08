@@ -224,23 +224,20 @@
       <scope>runtime</scope>
     </dependency>
 
-    <!-- App Engine Development Classes -->
-    <!--
-    <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-api-stubs</artifactId>
-      <version>1.0</version>
-      <scope>system</scope>
-      <systemPath>${gae.home}/lib/impl/appengine-api-stubs.jar</systemPath>
-    </dependency>
+    <!-- App Engine Runtime Dependencies-->
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-local-runtime</artifactId>
-      <version>1.0</version>
-      <scope>system</scope>
-      <systemPath>${gae.home}/lib/impl/appengine-local-runtime.jar</systemPath>
+      <version>${gae.version}</version>
+      <scope>runtime</scope>
     </dependency>
-    -->
+    <!-- <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-stubs</artifactId>
+      <version>${gae.version}</version>
+      <scope>runtime</scope>
+    </dependency> -->
+
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
