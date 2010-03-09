@@ -253,7 +253,7 @@
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-tools-api</artifactId>
-      <version>1.0</version>
+      <version>${gae.version}</version>
     </dependency>
 
     <dependency>
