@@ -14,8 +14,15 @@
  */
 package net.kindleit.gae;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,10 +31,13 @@ import java.util.Properties;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.settings.Proxy;
+import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 
 import com.google.appengine.tools.KickStart;
 import com.google.appengine.tools.admin.AppCfg;
+
 
 /** Base MOJO class for working with the Google App Engine SDK.
  *
@@ -78,8 +88,19 @@ public abstract class EngineGoalBase extends AbstractMojo {
   /** The username to use. Will prompt if omitted.
    *
    * @parameter expression="${gae.email}"
+   * @deprecated use maven settings.xml/server/username and "serverId" parameter
    */
+  @Deprecated
   protected String emailAccount;
+
+  /** The server id in maven settings.xml to use for emailAccount(username)
+   * and password when connecting to GAE.
+   *
+   * If password present in settings "--passin" is set automatically.
+   *
+   * @parameter expression="${gae.serverId}"
+   */
+  protected String serverId;
 
   /** The server to connect to.
    *
@@ -107,6 +128,8 @@ public abstract class EngineGoalBase extends AbstractMojo {
 
   /** Tell AppCfg to use a proxy.
    *
+   * By default will use first active proxy in maven settings.xml
+   *
    * @parameter expression="${gae.proxy}"
    */
   protected String proxy;
@@ -122,6 +145,14 @@ public abstract class EngineGoalBase extends AbstractMojo {
     }
   }
 
+  protected boolean hasServerSettings() {
+      if (serverId == null) {
+          return false;
+      } else {
+          final Server srv = settings.getServer(serverId);
+          return srv != null;
+      }
+  }
 
   /** Passes command to the Google App Engine AppCfg runner.
   *
@@ -137,7 +168,69 @@ public abstract class EngineGoalBase extends AbstractMojo {
     args.add(command);
     args.addAll(Arrays.asList(commandArguments));
     assureSystemProperties();
-    AppCfg.main(args.toArray(ARG_TYPE));
+
+    getLog().debug("execute AppCfg " + args.toString());
+
+    if (hasServerSettings() && settings.getServer(serverId).getPassword() != null) {
+        forkPasswordExpectThread(args.toArray(ARG_TYPE),
+            settings.getServer(serverId).getPassword());
+    } else {
+        AppCfg.main(args.toArray(ARG_TYPE));
+    }
+  }
+
+  private void forkPasswordExpectThread(final String[] args, final String password) {
+      getLog().info("Use Settings configuration from server id {" + serverId + "}");
+      // Parent for all threads created by AppCfg
+      final ThreadGroup threads = new ThreadGroup("AppCfgThreadGroup");
+
+       // Main execution Thread that belong to ThreadGroup threads
+      final Thread thread = new Thread(threads, "AppCfgMainThread") {
+
+          @Override
+          public void run() {
+              final PrintStream outOrig = System.out;
+              final InputStream inOrig = System.in;
+
+              final PipedInputStream inReplace = new PipedInputStream();
+              OutputStream stdin;
+              try {
+                stdin = new PipedOutputStream(inReplace);
+              } catch (final IOException e) {
+                  getLog().error("Unable to redirect input", e);
+                  return;
+              }
+              System.setIn(inReplace);
+
+              final BufferedWriter stdinWriter = new BufferedWriter(new OutputStreamWriter(stdin));
+
+              System.setOut(new PrintStream(new PasswordExpectOutputStream(threads, outOrig, new Runnable() {
+                public void run() {
+                    try {
+                        stdinWriter.write(password);
+                        stdinWriter.newLine();
+                        stdinWriter.flush();
+                    } catch (final IOException e) {
+                        getLog().error("Unable to enter password", e);
+                    }
+                }}), true));
+
+              try {
+                  AppCfg.main(args);
+              } catch (final Throwable e) {
+                  getLog().error("Unable to execute AppCfg", e);
+              } finally {
+                  System.setOut(outOrig);
+                  System.setIn(inOrig);
+              }
+          }
+      };
+      thread.start();
+      try {
+          thread.join();
+      } catch (final InterruptedException e) {
+          getLog().error("Interrupted waiting for process supervisor thread to finish", e);
+      }
   }
 
   /** Passes command to the Google App Engine KickStart runner.
@@ -201,12 +294,10 @@ public abstract class EngineGoalBase extends AbstractMojo {
   protected final List<String> getAppCfgArgs () {
     final List<String> args = getCommonArgs();
 
-
     addBooleanOption(args, "--disable_prompt", !settings.getInteractiveMode());
-
-    addStringOption(args, "--email=", emailAccount);
+    addEmailOption(args);
     addStringOption(args, "--host=", hostString);
-    addStringOption(args, "--proxy=", proxy);
+    addProxyOption(args);
     addBooleanOption(args, "--passin", passIn);
     addBooleanOption(args, "--enable_jar_splitting", splitJars);
     addBooleanOption(args, "--retain_upload_dir", keepTempUploadDir);
@@ -221,6 +312,31 @@ public abstract class EngineGoalBase extends AbstractMojo {
     addStringOption(args, "--server=", uploadServer);
 
     return args;
+  }
+
+  private void addEmailOption(final List<String> args) {
+    if (hasServerSettings() && emailAccount == null) {
+        addStringOption(args, "--email=",
+            settings.getServer(serverId).getUsername());
+        if (settings.getServer(serverId).getPassword() != null) {
+            // Force GAE tools to read from System.in instead of System.console()
+            passIn = true;
+        }
+    } else {
+        addStringOption(args, "--email=", emailAccount);
+    }
+  }
+
+  private void addProxyOption(final List<String> args) {
+    if (hasServerSettings() && proxy == null) {
+        final Proxy activCfgProxy = settings.getActiveProxy();
+        if (activCfgProxy != null) {
+            addStringOption(args, "--proxy=",
+                activCfgProxy.getHost() + ":" + activCfgProxy.getPort());
+        }
+    } else {
+        addStringOption(args, "--proxy=", proxy);
+    }
   }
 
   private final void addBooleanOption(final List<String> args, final String key,
