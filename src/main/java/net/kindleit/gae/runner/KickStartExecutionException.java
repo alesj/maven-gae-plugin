@@ -15,13 +15,17 @@
 package net.kindleit.gae.runner;
 
 /**
- * Thrown when an attempt to execute the App Engine {@link com.google.appengine.tools.KickStart} class fails.
+ * Thrown when an attempt to execute the App Engine
+ * {@link com.google.appengine.tools.KickStart} class fails.
  *
  * @author tmoore@incrementalism.net
  * @since 0.5.8
  */
 public class KickStartExecutionException extends Exception {
-  public KickStartExecutionException(Throwable cause) {
+  private static final long serialVersionUID = 1L;
+
+  public KickStartExecutionException(final Throwable cause) {
     super(cause);
   }
+
 }
