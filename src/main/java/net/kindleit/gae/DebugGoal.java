@@ -20,7 +20,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * Extends the {@link RunGoal} for running the project with a debugger port hook (optionally suspended).
+ * Extends the {@link RunGoal} for running the project with a debugger port hook
+ *  (optionally suspended).
  *
  * It is a simple utility method, as the run goal supports the passing of jvm options in the command line.
  *
@@ -30,7 +31,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @requiresDependencyResolution runtime
  * @execute phase="package"
  */
-public class DebugGoal extends RunGoal {
+public class DebugGoal extends StartGoal {
 
   /** Port to run in.
    *

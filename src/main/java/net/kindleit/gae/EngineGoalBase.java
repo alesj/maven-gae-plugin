@@ -1,4 +1,4 @@
-/* Copyright 2009 Kindleit.net Software Development
+/* Copyright 2010 Kindleit.net Software Development
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -11,6 +11,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * Includes contributions adapted from the Jetty Maven Plugin
+ * Copyright 2000-2004 Mort Bay Consulting Pty. Ltd.
  */
 package net.kindleit.gae;
 
@@ -28,6 +31,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import net.kindleit.gae.runner.KickStartRunner;
+import net.kindleit.gae.runner.AppEnginePluginMonitor;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -35,9 +41,7 @@ import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 
-import com.google.appengine.tools.KickStart;
 import com.google.appengine.tools.admin.AppCfg;
-
 
 /** Base MOJO class for working with the Google App Engine SDK.
  *
@@ -46,6 +50,9 @@ import com.google.appengine.tools.admin.AppCfg;
 public abstract class EngineGoalBase extends AbstractMojo {
 
   private static final String GAE_PROPS = "gae.properties";
+
+  private static final String INTERRUPTED_EXCEPTION =
+    "Interrupted waiting for process supervisor thread to finish";
 
   protected static final String[] ARG_TYPE = new String[0];
 
@@ -133,6 +140,25 @@ public abstract class EngineGoalBase extends AbstractMojo {
    * @parameter expression="${gae.proxy}"
    */
   protected String proxy;
+
+  /** Decides whether to wait after the server is started or to return the
+   * execution flow to the user.
+   *
+   * @parameter expression="${gae.wait}" default-value="false"
+   */
+  protected boolean wait;
+
+  /** Port to listen for stop requests on.
+   *
+   * @parameter expression="${gae.monitor.port}" default-value="8081"
+   */
+  protected int monitorPort;
+
+  /** Key to provide when making stop requests.
+   *
+   * @parameter expression="${gae.monitor.key}" default-value="monitor.${project.artifactId}"
+   */
+  protected String monitorKey;
 
   protected Properties gaeProperties;
 
@@ -229,7 +255,7 @@ public abstract class EngineGoalBase extends AbstractMojo {
       try {
           thread.join();
       } catch (final InterruptedException e) {
-          getLog().error("Interrupted waiting for process supervisor thread to finish", e);
+          getLog().error(INTERRUPTED_EXCEPTION, e);
       }
   }
 
@@ -248,11 +274,19 @@ public abstract class EngineGoalBase extends AbstractMojo {
     args.addAll(Arrays.asList(commandArguments));
 
     assureSystemProperties();
-    KickStart.main(args.toArray(ARG_TYPE));
+
+    try {
+      final KickStartRunner kickStart = KickStartRunner.createRunner(wait, getLog());
+
+      if (monitorPort > 0 && monitorKey != null) {
+        AppEnginePluginMonitor.monitor(monitorPort, monitorKey, kickStart, getLog());
+      }
+
+      kickStart.start(args);
+    } catch (final Exception e) {
+      throw new MojoExecutionException(e.getMessage(), e);
+    }
   }
-
-
-
 
 
   /** Groups alterations to System properties for the proper execution

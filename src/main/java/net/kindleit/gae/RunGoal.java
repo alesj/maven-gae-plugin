@@ -14,9 +14,6 @@
  */
 package net.kindleit.gae;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -30,49 +27,16 @@ import org.apache.maven.plugin.MojoFailureException;
  * @requiresDependencyResolution runtime
  * @execute phase="package"
  */
-public class RunGoal extends EngineGoalBase {
+public class RunGoal extends StartGoal {
 
-  /** Port to run in.
+  /** Will always run in the foreground.
    *
-   * @parameter expression="${gae.port}" default-value="8080"
+   * @see net.kindleit.gae.StartGoal#execute()
    */
-  protected int port;
-
-  /** Address to bind to.
-   *
-   * @parameter expression="${gae.address}" default-value="0.0.0.0"
-   */
-  protected String address;
-
-  /** Do not check for new SDK versions.
-  *
-  * @parameter expression="${gae.disableUpdateCheck}" default-value="false"
-  */
-  protected boolean disableUpdateCheck;
-
-  /** Arbitrary list of JVM Flags to send to the KickStart task.
-   *
-   * @parameter
-   */
-  protected List<String> jvmFlags;
-
+  @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    final List<String> arguments = new ArrayList<String>();
-
-    arguments.add("--address=" + address);
-    arguments.add("--port=" + port);
-    if (disableUpdateCheck) {
-      arguments.add("--disable_update_check");
-    }
-    if (jvmFlags != null) {
-      for (final String jvmFlag : jvmFlags) {
-        arguments.add("--jvm_flag=" + jvmFlag);
-      }
-    }
-    arguments.add(appDir);
-
-    runKickStart("com.google.appengine.tools.development.DevAppServerMain",
-        arguments.toArray(new String[] {}));
+    wait = true;
+    super.execute();
   }
 
 }
