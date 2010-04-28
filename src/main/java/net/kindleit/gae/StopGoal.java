@@ -48,14 +48,14 @@ public class StopGoal extends AbstractMojo {
 
   /** Port to listen for stop requests on.
    *
-   * @parameter expression="${gae.monitor.port}"
+   * @parameter expression="${gae.monitor.port}" default-value="8081"
    * @required
    */
   protected int monitorPort;
 
   /** Key to provide when making stop requests.
    *
-   * @parameter expression="${gae.monitor.key}"
+   * @parameter expression="${gae.monitor.key}" default-value="monitor.${project.artifactId}"
    * @required
    */
   protected String monitorKey;
