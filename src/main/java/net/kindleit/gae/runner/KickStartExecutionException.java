@@ -28,4 +28,8 @@ public class KickStartExecutionException extends Exception {
     super(cause);
   }
 
+  public KickStartExecutionException(final String message) {
+    super(message);
+  }
+
 }

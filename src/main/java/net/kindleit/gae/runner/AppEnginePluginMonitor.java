@@ -20,11 +20,12 @@ package net.kindleit.gae.runner;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.apache.maven.plugin.logging.Log;
+import com.google.appengine.tools.KickStart;
 
 /**
  * Listens for stop commands e.g. via mvn gae:stop and causes the development server to stop.
@@ -39,12 +40,10 @@ public final class AppEnginePluginMonitor implements Runnable {
   }
 
   private final String key;
-  private final KickStartRunner kickStart;
-  private final Log log;
-
   private ServerSocket serverSocket;
 
-  private AppEnginePluginMonitor(final int port, final String key, final KickStartRunner kickStart, final Log log) throws IOException {
+  private AppEnginePluginMonitor(final int port, final String key)
+  throws IOException {
     if (port <= 0) {
       throw new IllegalStateException("Bad stop port");
     }
@@ -53,8 +52,6 @@ public final class AppEnginePluginMonitor implements Runnable {
     }
 
     this.key = key;
-    this.kickStart = kickStart;
-    this.log = log;
 
     serverSocket = new ServerSocket(port, 1, InetAddress.getByName("127.0.0.1"));
     serverSocket.setReuseAddress(true);
@@ -66,59 +63,55 @@ public final class AppEnginePluginMonitor implements Runnable {
       try {
         socket = serverSocket.accept();
         socket.setSoLinger(false, 0);
-        final BufferedReader lin =
+        final BufferedReader in =
           new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        final OutputStream out = socket.getOutputStream();
 
-        if (!key.equals(lin.readLine())) {
+        if (!key.equals(in.readLine())) {
           continue;
         }
 
-        final Commands cmd = Commands.valueOf(lin.readLine());
+        final Commands cmd = Commands.valueOf(in.readLine());
         if (cmd == null) {
-          getLog().info("Unsupported monitor operation");
+          out.write("Unsupported monitor operation".getBytes());
           continue;
         }
 
         switch (cmd) {
         case STOP:
-          executeStop(socket);
+          executeStop(socket, out);
           break;
         }
 
       } catch (final Exception e) {
-        getLog().error(e);
+
       } finally {
         if (socket != null) {
           try {
             socket.close();
           } catch (final Exception e) {
-            getLog().debug(e);
+            System.err.println(e.getMessage());
           }
         }
       }
     }
   }
 
-  private void executeStop(final Socket socket) {
-    kickStart.stop();
-
+  private void executeStop(final Socket socket, final OutputStream out) {
     try {
+      out.write("Engine stopped".getBytes());
       socket.close();
+      try {
+        serverSocket.close();
+      } catch (final Exception e) {
+        System.err.println(e.getMessage());
+      }
+      serverSocket = null;
+      System.exit(0);
     } catch (final Exception e) {
-      getLog().debug(e);
+      System.err.println(e.getMessage());
+      System.exit(1);
     }
-
-    try {
-      serverSocket.close();
-    } catch (final Exception e) {
-      getLog().debug(e);
-    }
-
-    serverSocket = null;
-  }
-
-  private Log getLog() {
-    return log;
   }
 
   /**
@@ -132,10 +125,13 @@ public final class AppEnginePluginMonitor implements Runnable {
    * @param log the Maven plugin logger to direct output to
    * @throws IOException if an I/O error occurs while opening the server socket
    */
-  public static void monitor(final int stopPort, final String stopKey, final KickStartRunner kickStart, final Log log) throws IOException {
-    final Thread monitor = new Thread(new AppEnginePluginMonitor(stopPort, stopKey, kickStart, log));
-    monitor.setDaemon(true);
+  public static void main(final String[] args) throws IOException {
+    final int stopPort = Integer.valueOf(System.getProperty("monitor.port"));
+    final String stopKey = System.getProperty("monitor.key");
+
+    final Thread monitor = new Thread(new AppEnginePluginMonitor(stopPort, stopKey));
     monitor.setName("StopAppEnginePluginMonitor");
     monitor.start();
+    KickStart.main(args);
   }
 }

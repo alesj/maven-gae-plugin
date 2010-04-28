@@ -15,8 +15,17 @@
 package net.kindleit.gae;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
+import net.kindleit.gae.runner.KickStartRunner;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -34,6 +43,39 @@ import org.apache.maven.plugin.MojoFailureException;
  * @since 0.5.8
  */
 public class StartGoal extends EngineGoalBase {
+
+  /**
+   * Used to look up Artifacts in the remote repository.
+   *
+   * @component
+   */
+  private ArtifactResolver resolver;
+
+  /** This plugins dependent artifacts.
+   *
+   * @parameter expression="${project.pluginArtifacts}"
+   * @required
+   * @readonly
+   */
+  private Set<Artifact> plugins;
+
+  /**
+   * Location of the local repository.
+   *
+   * @parameter expression="${localRepository}"
+   * @readonly
+   * @required
+   */
+  private ArtifactRepository localRepo;
+
+  /**
+   * List of Remote Repositories used by the resolver
+   *
+   * @parameter expression="${project.remoteArtifactRepositories}"
+   * @readonly
+   * @required
+   */
+  private List<ArtifactRepository> remoteRepos;
 
   /** Port to run in.
    *
@@ -76,6 +118,44 @@ public class StartGoal extends EngineGoalBase {
 
     runKickStart("com.google.appengine.tools.development.DevAppServerMain",
         arguments.toArray(new String[]{}));
+  }
+
+  /** Passes command to the Google App Engine KickStart runner.
+  *
+  * @param startClass command to run through KickStart
+  * @param commandArguments arguments to the KickStart command.
+  * @throws MojoExecutionException If {@link #assureSystemProperties()} fails
+  */
+  protected final void runKickStart(final String startClass,
+    final String ... commandArguments) throws MojoExecutionException {
+
+    final List<String> args = new ArrayList<String>();
+    args.add(startClass);
+    args.addAll(getCommonArgs());
+    args.addAll(Arrays.asList(commandArguments));
+
+    assureSystemProperties();
+
+    try {
+      resolveArtifacts(plugins);
+      KickStartRunner.createRunner(wait, plugins, gaeProperties, getLog())
+        .start(monitorPort, monitorKey, args);
+    } catch (final Exception e) {
+      throw new MojoExecutionException(e.getMessage(), e);
+    }
+  }
+
+  protected final void resolveArtifacts(final Set<Artifact> artifacts)
+  throws MojoExecutionException {
+    for (final Artifact pluginA : artifacts) {
+      try {
+        resolver.resolve(pluginA, remoteRepos, localRepo);
+      } catch (final ArtifactResolutionException e) {
+        throw new MojoExecutionException("Failure Resolving Artifacts", e);
+      } catch (final ArtifactNotFoundException e) {
+        throw new MojoExecutionException("Failure Resolving Artifacts", e);
+      }
+    }
   }
 
 }

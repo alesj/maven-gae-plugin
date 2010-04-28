@@ -31,12 +31,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import net.kindleit.gae.runner.KickStartRunner;
-import net.kindleit.gae.runner.AppEnginePluginMonitor;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
@@ -56,21 +52,13 @@ public abstract class EngineGoalBase extends AbstractMojo {
 
   protected static final String[] ARG_TYPE = new String[0];
 
-  /** The Maven project reference.
+  /** The Maven settings reference.
    *
-   * @parameter expression="${project}"
+   * @parameter expression="${settings}"
    * @required
    * @readonly
    */
-  protected MavenProject project;
-
-  /** The Maven settings reference.
-  *
-  * @parameter expression="${settings}"
-  * @required
-  * @readonly
-  */
- protected Settings settings;
+  protected Settings settings;
 
   /** Overrides where the Project War Directory is located.
    *
@@ -258,36 +246,6 @@ public abstract class EngineGoalBase extends AbstractMojo {
           getLog().error(INTERRUPTED_EXCEPTION, e);
       }
   }
-
-  /** Passes command to the Google App Engine KickStart runner.
-  *
-  * @param startClass command to run through KickStart
-  * @param commandArguments arguments to the KickStart command.
-  * @throws MojoExecutionException If {@link #assureSystemProperties()} fails
-  */
-  protected final void runKickStart(final String startClass,
-    final String ... commandArguments) throws MojoExecutionException {
-
-    final List<String> args = new ArrayList<String>();
-    args.add(startClass);
-    args.addAll(getCommonArgs());
-    args.addAll(Arrays.asList(commandArguments));
-
-    assureSystemProperties();
-
-    try {
-      final KickStartRunner kickStart = KickStartRunner.createRunner(wait, getLog());
-
-      if (monitorPort > 0 && monitorKey != null) {
-        AppEnginePluginMonitor.monitor(monitorPort, monitorKey, kickStart, getLog());
-      }
-
-      kickStart.start(args);
-    } catch (final Exception e) {
-      throw new MojoExecutionException(e.getMessage(), e);
-    }
-  }
-
 
   /** Groups alterations to System properties for the proper execution
    * of the actual GAE code.

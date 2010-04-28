@@ -14,14 +14,16 @@
  */
 package net.kindleit.gae.runner;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
-
-import com.google.appengine.tools.KickStart;
 
 /**
  * An implementation of {@code KickStartRunner} that asynchronously invokes {@link com.google.appengine.tools.KickStart}
@@ -31,16 +33,47 @@ import com.google.appengine.tools.KickStart;
  * @since 0.5.8
  */
 final class BackgroundKickStartRunner extends KickStartRunner {
+
+  private final String pluginPath;
+  private final Log log;
+
   private Thread thread;
   private Exception thrown;
+  private boolean started;
 
   /**
    * Creates a new {@code BackgroundKickStartRunner}.
    *
-   * @param log the Maven plugin logger to direct output to
+   * @param artifacts The Maven Project.
+   * @param gaeProperties Properties with the plugin's groupId, and artifactId.
+   * @param log The Maven plugin logger to direct output to.
+   * @throws KickStartExecutionException if the plugin cannot be found.
    */
-  public BackgroundKickStartRunner(Log log) {
-    super(log);
+  public BackgroundKickStartRunner(final Set<Artifact> artifacts,
+      final Properties gaeProperties, final Log log)
+  throws KickStartExecutionException {
+    this.log = log;
+    pluginPath = getPluginPath(artifacts, gaeProperties);
+  }
+
+  private String getPluginPath(final Set<Artifact> artifacts,
+      final Properties gaeProperties) throws KickStartExecutionException {
+
+    final String groupId = gaeProperties.getProperty("plugin.groupId");
+    final String artifactId = gaeProperties.getProperty("plugin.artifactId");
+
+    for (final Artifact a : artifacts) {
+      if (groupId.equals(a.getGroupId())
+          && artifactId.equals(a.getArtifactId())) {
+        try {
+          return a.getFile().getCanonicalPath();
+        } catch (final IOException e) {
+          log.error(e);
+          throw new KickStartExecutionException(e);
+        }
+      }
+    }
+    throw new KickStartExecutionException("Plugin not found");
   }
 
   /**
@@ -50,17 +83,24 @@ final class BackgroundKickStartRunner extends KickStartRunner {
    *
    * @param args the arguments to pass to {@code KickStart}
    */
-  public synchronized void start(final List<String> args) throws KickStartExecutionException {
+  @Override
+  public synchronized void start(final int monitorPort, final String monitorKey,
+      final List<String> args) throws KickStartExecutionException {
     if (thread != null) {
       throw new IllegalStateException("Already started");
     }
 
+    final String classPath =
+      System.getProperty("java.class.path") + ":" + pluginPath;
+    System.out.println(classPath);
     final Commandline commandline = new Commandline("java");
     commandline.createArg().setValue("-ea");
     commandline.createArg().setValue("-cp");
-    commandline.createArg().setValue(System.getProperty("java.class.path"));
+    commandline.createArg().setValue(classPath);
+    commandline.createArg().setValue("-Dmonitor.port=" + monitorPort);
+    commandline.createArg().setValue("-Dmonitor.key=" + monitorKey);
     commandline.createArg().setValue("-Dappengine.sdk.root=" + System.getProperty("appengine.sdk.root"));
-    commandline.createArg().setValue(KickStart.class.getName());
+    commandline.createArg().setValue(AppEnginePluginMonitor.class.getName());
     commandline.addArguments(args.toArray(new String[args.size()]));
 
     final StreamConsumer outConsumer = new StreamConsumer() {
@@ -79,7 +119,7 @@ final class BackgroundKickStartRunner extends KickStartRunner {
       public void run() {
         try {
           CommandLineUtils.executeCommandLine(commandline, outConsumer, errConsumer);
-        } catch (Exception e) {
+        } catch (final Exception e) {
           setThrown(e);
         }
       }
@@ -89,22 +129,20 @@ final class BackgroundKickStartRunner extends KickStartRunner {
     waitUntilStarted();
   }
 
-  /**
-   * Stops the {@code KickStart} instance started by this runner by interrupting the background thread.
-   */
-  public synchronized void stop() {
-    if (thread != null) {
-      getLog().info("Stopping App Engine");
-      thread.interrupt();
-    }
-    thread = null;
-  }
-
   private synchronized void consumeOutputLine(final String line) {
     if (!isStarted() && line.startsWith("The server is running")) {
       setStarted(true);
     }
     System.out.println(line);
+  }
+
+  private synchronized void setStarted(final boolean b) {
+    started = b;
+    notifyAll();
+  }
+
+  private synchronized boolean isStarted() {
+    return started;
   }
 
   private synchronized void consumeErrorLine(final String line) {
@@ -120,7 +158,7 @@ final class BackgroundKickStartRunner extends KickStartRunner {
     while (!isStarted() && thrown == null) {
       try {
         wait();
-      } catch (InterruptedException e) {
+      } catch (final InterruptedException e) {
         thrown = e;
         break;
       }

@@ -28,33 +28,29 @@ import com.google.appengine.tools.KickStart;
  */
 final class ForegroundKickStartRunner extends KickStartRunner {
 
+  Log log;
+
   /**
    * Creates a new {@code ForegroundKickStartRunner}.
    *
    * @param log the Maven plugin logger to direct output to
    */
-  public ForegroundKickStartRunner(Log log) {
-    super(log);
+  public ForegroundKickStartRunner(final Log log) {
+    this.log = log;
   }
 
   /**
    * Synchronously starts a {@code KickStart} instance with the specified arguments.
    * This method method will block until the server exits.
    *
+   * @param monitorPort unused.
+   * @param monitorKey unused.
    * @param args the arguments to pass to {@code KickStart}
    */
-  public void start(final List<String> args) {
-    setStarted(true);
+  @Override
+  public void start(final int monitorPort, final String monitorKey,
+      final List<String> args) {
     KickStart.main(args.toArray(new String[args.size()]));
   }
 
-  /**
-   * Stops the {@code KickStart} instance started by this runner by exiting the JVM.
-   */
-  public void stop() {
-    if (isStarted()) {
-      getLog().info("Killing App Engine");
-      System.exit(0);
-    }
-  }
 }
