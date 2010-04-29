@@ -42,7 +42,7 @@ public final class AppEnginePluginMonitor implements Runnable {
   private final String key;
   private ServerSocket serverSocket;
 
-  private AppEnginePluginMonitor(final int port, final String key)
+  public AppEnginePluginMonitor(final int port, final String key)
   throws IOException {
     if (port <= 0) {
       throw new IllegalStateException("Bad stop port");
@@ -125,13 +125,18 @@ public final class AppEnginePluginMonitor implements Runnable {
    * @param log the Maven plugin logger to direct output to
    * @throws IOException if an I/O error occurs while opening the server socket
    */
-  public static void main(final String[] args) throws IOException {
+  public static void main(final String[] args) {
     final int stopPort = Integer.valueOf(System.getProperty("monitor.port"));
     final String stopKey = System.getProperty("monitor.key");
 
-    final Thread monitor = new Thread(new AppEnginePluginMonitor(stopPort, stopKey));
-    monitor.setName("StopAppEnginePluginMonitor");
-    monitor.start();
-    KickStart.main(args);
+    try {
+      final Thread monitor =
+        new Thread(new AppEnginePluginMonitor(stopPort, stopKey));
+      monitor.setName("StopAppEnginePluginMonitor");
+      monitor.start();
+      KickStart.main(args);
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

@@ -38,8 +38,7 @@ final class BackgroundKickStartRunner extends KickStartRunner {
   private final Log log;
 
   private Thread thread;
-  private Exception thrown;
-  private boolean started;
+  private volatile Exception thrown;
 
   /**
    * Creates a new {@code BackgroundKickStartRunner}.
@@ -54,6 +53,87 @@ final class BackgroundKickStartRunner extends KickStartRunner {
   throws KickStartExecutionException {
     this.log = log;
     pluginPath = getPluginPath(artifacts, gaeProperties);
+  }
+
+  /**
+   * Asynchronously starts a {@code KickStart} instance with the specified arguments.
+   * This method method will block until the server starts up, and then allows the current thread to continue while
+   * the server runs in the background.
+   *
+   * @param args the arguments to pass to {@code KickStart}
+   */
+  @Override
+  public synchronized void start(final int monitorPort, final String monitorKey,
+      final List<String> args) throws KickStartExecutionException {
+    if (thread != null) {
+      throw new IllegalStateException("Already started");
+    }
+
+    thread = setupCommandLine(monitorPort, monitorKey, args);
+    thread.start();
+
+    try {
+      wait();
+    } catch (final InterruptedException e) {
+      thrown = e;
+    }
+
+    if (thrown != null) {
+      throw new KickStartExecutionException(thrown);
+    }
+  }
+
+  private Thread setupCommandLine(final int monitorPort, final String monitorKey,
+      final List<String> args) {
+    final Commandline commandline = new Commandline("java");
+    final String classPath =
+      System.getProperty("java.class.path") + ":" + pluginPath;
+    commandline.createArg().setValue("-ea");
+    commandline.createArg().setValue("-cp");
+    commandline.createArg().setValue(classPath);
+    commandline.createArg().setValue("-Dmonitor.port=" + monitorPort);
+    commandline.createArg().setValue("-Dmonitor.key=" + monitorKey);
+    commandline.createArg().setValue("-Dappengine.sdk.root=" + System.getProperty("appengine.sdk.root"));
+    commandline.createArg().setValue(AppEnginePluginMonitor.class.getName());
+    commandline.addArguments(args.toArray(new String[args.size()]));
+
+    final StreamConsumer outConsumer = new StreamConsumer() {
+      public void consumeLine(final String line) {
+        consumeOutputLine(line);
+      }
+    };
+
+    final StreamConsumer errConsumer = new StreamConsumer() {
+      public void consumeLine(final String line) {
+        consumeErrorLine(line);
+      }
+    };
+
+    return new Thread(new Runnable() {
+      public void run() {
+        try {
+          CommandLineUtils.executeCommandLine(commandline, outConsumer, errConsumer);
+        } catch (final Exception e) {
+          setThrown(e);
+        }
+      }
+    });
+  }
+
+  private synchronized void consumeOutputLine(final String line) {
+    System.out.println(line);
+    if (line.startsWith("The server is running")) {
+      notify();
+    }
+  }
+
+  private synchronized void consumeErrorLine(final String line) {
+    System.err.println(line);
+  }
+
+  private synchronized void setThrown(final Exception thrown) {
+    this.thrown = thrown;
+    notify();
   }
 
   private String getPluginPath(final Set<Artifact> artifacts,
@@ -76,99 +156,4 @@ final class BackgroundKickStartRunner extends KickStartRunner {
     throw new KickStartExecutionException("Plugin not found");
   }
 
-  /**
-   * Asynchronously starts a {@code KickStart} instance with the specified arguments.
-   * This method method will block until the server starts up, and then allows the current thread to continue while
-   * the server runs in the background.
-   *
-   * @param args the arguments to pass to {@code KickStart}
-   */
-  @Override
-  public synchronized void start(final int monitorPort, final String monitorKey,
-      final List<String> args) throws KickStartExecutionException {
-    if (thread != null) {
-      throw new IllegalStateException("Already started");
-    }
-
-    final String classPath =
-      System.getProperty("java.class.path") + ":" + pluginPath;
-    System.out.println(classPath);
-    final Commandline commandline = new Commandline("java");
-    commandline.createArg().setValue("-ea");
-    commandline.createArg().setValue("-cp");
-    commandline.createArg().setValue(classPath);
-    commandline.createArg().setValue("-Dmonitor.port=" + monitorPort);
-    commandline.createArg().setValue("-Dmonitor.key=" + monitorKey);
-    commandline.createArg().setValue("-Dappengine.sdk.root=" + System.getProperty("appengine.sdk.root"));
-    commandline.createArg().setValue(AppEnginePluginMonitor.class.getName());
-    commandline.addArguments(args.toArray(new String[args.size()]));
-
-    final StreamConsumer outConsumer = new StreamConsumer() {
-      public void consumeLine(final String line) {
-        consumeOutputLine(line);
-      }
-    };
-
-    final StreamConsumer errConsumer = new StreamConsumer() {
-      public void consumeLine(final String line) {
-        consumeErrorLine(line);
-      }
-    };
-
-    thread = new Thread(new Runnable() {
-      public void run() {
-        try {
-          CommandLineUtils.executeCommandLine(commandline, outConsumer, errConsumer);
-        } catch (final Exception e) {
-          setThrown(e);
-        }
-      }
-    });
-    thread.start();
-
-    waitUntilStarted();
-  }
-
-  private synchronized void consumeOutputLine(final String line) {
-    if (!isStarted() && line.startsWith("The server is running")) {
-      setStarted(true);
-    }
-    System.out.println(line);
-  }
-
-  private synchronized void setStarted(final boolean b) {
-    started = b;
-    notifyAll();
-  }
-
-  private synchronized boolean isStarted() {
-    return started;
-  }
-
-  private synchronized void consumeErrorLine(final String line) {
-    System.err.println(line);
-  }
-
-  private synchronized void setThrown(final Exception thrown) {
-    this.thrown = thrown;
-    notifyAll();
-  }
-
-  private synchronized void waitUntilStarted() throws KickStartExecutionException {
-    while (!isStarted() && thrown == null) {
-      try {
-        wait();
-      } catch (final InterruptedException e) {
-        thrown = e;
-        break;
-      }
-    }
-
-    if (thrown != null) {
-      if (thrown instanceof RuntimeException) {
-        throw (RuntimeException) thrown;
-      }
-      throw new KickStartExecutionException(thrown);
-    }
-  }
 }

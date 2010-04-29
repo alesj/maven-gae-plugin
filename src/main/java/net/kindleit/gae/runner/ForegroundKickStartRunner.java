@@ -50,6 +50,14 @@ final class ForegroundKickStartRunner extends KickStartRunner {
   @Override
   public void start(final int monitorPort, final String monitorKey,
       final List<String> args) {
+    try {
+      final Thread monitor =
+        new Thread(new AppEnginePluginMonitor(monitorPort, monitorKey));
+      monitor.setName("StopAppEnginePluginMonitor");
+      monitor.start();
+    } catch (final Exception e) {
+      log.error("Monitor failed to start", e);
+    }
     KickStart.main(args.toArray(new String[args.size()]));
   }
 
