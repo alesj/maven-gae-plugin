@@ -286,11 +286,13 @@ public abstract class EngineGoalBase extends AbstractMojo {
   protected final List<String> getAppCfgArgs () {
     final List<String> args = getCommonArgs();
 
-    addBooleanOption(args, "--disable_prompt", !settings.getInteractiveMode());
     addEmailOption(args);
     addStringOption(args, "--host=", hostString);
     addProxyOption(args);
     addBooleanOption(args, "--passin", passIn);
+    if (!passIn) {
+      addBooleanOption(args, "--disable_prompt", !settings.getInteractiveMode());
+    }
     addBooleanOption(args, "--enable_jar_splitting", splitJars);
     addBooleanOption(args, "--retain_upload_dir", keepTempUploadDir);
 
