@@ -14,6 +14,7 @@
  */
 package net.kindleit.gae.runner;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
@@ -87,7 +88,7 @@ final class BackgroundKickStartRunner extends KickStartRunner {
       final List<String> args) {
     final Commandline commandline = new Commandline("java");
     final String classPath =
-      System.getProperty("java.class.path") + ":" + pluginPath;
+      System.getProperty("java.class.path") + File.pathSeparator + pluginPath;
     commandline.createArg().setValue("-ea");
     commandline.createArg().setValue("-cp");
     commandline.createArg().setValue(classPath);
