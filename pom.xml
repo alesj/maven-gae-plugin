@@ -4,7 +4,7 @@
 	<groupId>net.kindleit</groupId>
 	<artifactId>maven-gae-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>0.5.8</version>
+	<version>0.5.9-SNAPSHOT</version>
 
 	<name>Maven GAE Plugin</name>
 	<description>Maven plugin for the Google App Engine</description>
@@ -117,9 +117,9 @@
 	</build>
 
 	<scm>
-		<connection>scm:svn:http://maven-gae-plugin.googlecode.com/svn/tags/0.5.8</connection>
-		<developerConnection>scm:svn:https://maven-gae-plugin.googlecode.com/svn/tags/0.5.8</developerConnection>
-		<url>http://code.google.com/p/maven-gae-plugin/source/browse/tags/0.5.8</url>
+		<connection>scm:svn:http://maven-gae-plugin.googlecode.com/svn/trunk</connection>
+		<developerConnection>scm:svn:https://maven-gae-plugin.googlecode.com/svn/trunk</developerConnection>
+		<url>http://code.google.com/p/maven-gae-plugin/source/browse/trunk</url>
 	</scm>
 
 	<repositories>
