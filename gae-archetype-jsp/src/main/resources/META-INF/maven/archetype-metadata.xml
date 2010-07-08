@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-descriptor name="jsp-gae-archetype">
+	<requiredProperties>
+		<requiredProperty key="artifactId" />
+		<requiredProperty key="groupId" />
+		<requiredProperty key="package" />
+		<requiredProperty key="gaeVersion">
+			<defaultValue>1.3.5</defaultValue>
+		</requiredProperty>
+    <requiredProperty key="gaePluginVersion" />
+		<requiredProperty key="gaeApplicationName" />
+		<requiredProperty key="gaeApplicationVersion">
+			<defaultValue>0</defaultValue>
+		</requiredProperty>
+	</requiredProperties>
+	<fileSets>
+		<fileSet filtered="true" packaged="true" encoding="UTF-8">
+			<directory>src/main/java</directory>
+			<includes>
+				<include>**/*.java</include>
+				<include>**/*.html</include>
+			</includes>
+		</fileSet>
+		<fileSet filtered="true" encoding="UTF-8">
+			<directory>src/main/webapp</directory>
+			<includes>
+				<include>**/*.xml</include>
+				<include>**/*.html</include>
+				<include>**/*.jsp</include>
+			</includes>
+		</fileSet>
+		<fileSet filtered="true" packaged="true" encoding="UTF-8">
+			<directory>src/main/resources</directory>
+			<includes>
+				<include>**/*.html</include>
+				<include>**/*.properties</include>
+			</includes>
+			<excludes>
+				<exclude>log4j.properties</exclude>
+				<exclude>logging.properties</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet filtered="true" encoding="UTF-8">
+			<directory>src/main/resources</directory>
+			<includes>
+				<include>**/*.xml</include>
+				<include>**/*.properties</include>
+			</includes>
+		</fileSet>
+		<fileSet encoding="UTF-8">
+			<directory>src/main/webapp</directory>
+			<includes>
+				<include>**/*.MF</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+</archetype-descriptor>

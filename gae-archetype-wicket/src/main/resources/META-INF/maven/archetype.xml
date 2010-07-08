@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype>
+  <id>gae-archetype-wicket</id>
+  <sources>
+    <source>src/main/java/HomePage.java</source>
+    <source>src/main/java/GaeWicketApplication.java</source>
+  </sources>
+  <resources>
+    <resource>src/main/resources/HomePage.html</resource>
+    <resource>src/main/webapp/WEB-INF/appengine-web.xml</resource>
+    <resource>src/main/webapp/WEB-INF/web.xml</resource>
+    <resource>src/main/resources/logging.properties</resource>
+    <resource>src/main/resources/META-INF/jdoconfig.xml</resource>
+    <resource>src/main/resources/META-INF/persistence.xml</resource>
+    <resource>src/main/resources/log4j.properties</resource>
+  </resources>
+</archetype>

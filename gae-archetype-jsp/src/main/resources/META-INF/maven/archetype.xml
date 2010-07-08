@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype>
+	<id>gae-archetype-jsp</id>
+	<sources>
+		<source>src/main/java/model/Message.java</source>
+		<source>src/main/java/server/MessageRepository.java</source>
+		<source>src/main/java/web/IndexServlet.java</source>
+	</sources>
+	<resources>
+		<resource>src/main/webapp/index.jsp</resource>
+		<resource>src/main/webapp/WEB-INF/appengine-web.xml</resource>
+		<resource>src/main/webapp/WEB-INF/web.xml</resource>
+		<resource>src/main/webapp/META-INF/MANIFEST.MF</resource>
+		<resource>src/main/resources/logging.properties</resource>
+		<resource>src/main/resources/log4j.properties</resource>
+		<resource>src/main/resources/META-INF/jdoconfig.xml</resource>
+		<resource>src/main/resources/META-INF/persistence.xml</resource>
+	</resources>
+</archetype>
