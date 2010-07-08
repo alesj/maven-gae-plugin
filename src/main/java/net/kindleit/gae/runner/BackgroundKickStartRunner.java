@@ -123,13 +123,16 @@ final class BackgroundKickStartRunner extends KickStartRunner {
 
   private synchronized void consumeOutputLine(final String line) {
     System.out.println(line);
-    if (line.startsWith("The server is running")) {
+    if (line.contains("The server is running")) {
       notify();
     }
   }
 
   private synchronized void consumeErrorLine(final String line) {
     System.err.println(line);
+    if (line.contains("The server is running")) {
+      notify();
+    }
   }
 
   private synchronized void setThrown(final Exception thrown) {
