@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>maven-gae-plugin</artifactId>
-  <version>${parent.version}</version>
+  <version>0.6.0</version>
   <packaging>maven-plugin</packaging>
   
   <name>Maven GAE Plugin</name>
@@ -11,7 +11,7 @@
   <parent>
     <groupId>net.kindleit</groupId>
     <artifactId>maven-gae-parent</artifactId>
-    <version>0.6.0-SNAPSHOT</version>
+    <version>0.6.0</version>
     <relativePath>..</relativePath>
   </parent>
 

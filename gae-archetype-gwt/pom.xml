@@ -3,7 +3,7 @@
   
   <artifactId>gae-archetype-gwt</artifactId>
   <packaging>maven-archetype</packaging>
-  <version>${parent.version}</version>
+  <version>0.6.0</version>
   
   <name>Archetype - GAE-GWT</name>
   <description>Archetype for creating maven-gae projects that uses GWT for the view</description>
@@ -11,7 +11,7 @@
   <parent>
     <groupId>net.kindleit</groupId>
     <artifactId>maven-gae-parent</artifactId>
-    <version>0.6.0-SNAPSHOT</version>
+    <version>0.6.0</version>
     <relativePath>..</relativePath>
   </parent>  
 
