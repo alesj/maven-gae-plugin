@@ -12,6 +12,12 @@
     <src>images/maven-gae-plugin-logo-small.png</src>
     <href>index.html</href>
   </bannerRight>
+  <poweredBy>
+    <logo name="Built By Maven" href="http://maven.apache.org" 
+          img="http://maven.apache.org/images/logos/maven-feather.png" />
+    <logo name="Development Accelerated By JRebel" href="http://www.zeroturnaround.com/javarebel/" 
+          img="http://www.zeroturnaround.com/wp-content/themes/zeroturnaround3.0/gfx/logo.gif" />
+  </poweredBy>
   <body>
     <links>
       <item name="Google App Engine" href="http://code.google.com/appengine"/>
