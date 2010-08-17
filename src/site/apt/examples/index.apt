@@ -198,16 +198,34 @@ Examples
  
 * Using GWT.
 
- GWT compilation can be done by using Codehaus' 
+ GWT compilation can be done by using Codehaus'
  {{{http://mojo.codehaus.org/gwt-maven-plugin/index.html}gwt-maven-plugin}}. Please refer their own 
  documentation, as it is very well written and running GWT on GAE does not require any additional steps.
 
-* More examples.
+* Archetypes.
 
- For more details, check out the example project sources from SVN:
-
- * {{{http://maven-gae-plugin.googlecode.com/svn/example/jsp-persistence-app}Plain JSP based example}}
-  
- * {{{http://maven-gae-plugin.googlecode.com/svn/example/wicket-app}Wicket based example}} 
+ There are currently three archetypes we maintain:
  
- * {{{http://maven-gae-plugin.googlecode.com/svn/example/gwt-persistence-app}GWT based example}} 
+ * Plain JSP based example:
+
++---+
+mvn archetype:generate -DarchetypeGroupId=net.kindleit -DarchetypeArtifactId=gae-archetype-jsp \
+ -DarchetypeVersion=0.6.0 -DgroupId=com.myapp.test -DartifactId=testapp \
+ -DarchetypeRepository=http://maven-gae-plugin.googlecode.com/svn/repository
++---+
+
+ * Wicket based example
+
++---+
+mvn archetype:generate -DarchetypeGroupId=net.kindleit -DarchetypeArtifactId=gae-archetype-wicket \
+ -DarchetypeVersion=0.6.0 -DgroupId=com.myapp.test -DartifactId=testapp \
+ -DarchetypeRepository=http://maven-gae-plugin.googlecode.com/svn/repository
++---+
+
+ * GWT based example
+
++---+
+mvn archetype:generate -DarchetypeGroupId=net.kindleit -DarchetypeArtifactId=gae-archetype-gwt \
+  -DarchetypeVersion=0.6.0 -DgroupId=com.myapp.test -DartifactId=testapp \
+  -DarchetypeRepository=http://maven-gae-plugin.googlecode.com/svn/repository
++---+
