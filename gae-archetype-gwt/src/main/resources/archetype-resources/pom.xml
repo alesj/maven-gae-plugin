@@ -290,7 +290,7 @@
           <dependency>
             <groupId>net.kindleit</groupId>
             <artifactId>gae-runtime</artifactId>
-            <version>${gaePluginVersion}</version>
+            <version>${dollar}{gae.version}</version>
           </dependency>
         </dependencies>
       </plugin>
