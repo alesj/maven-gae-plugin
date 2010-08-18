@@ -291,6 +291,7 @@
             <groupId>net.kindleit</groupId>
             <artifactId>gae-runtime</artifactId>
             <version>${dollar}{gae.version}</version>
+            <type>pom</type>
           </dependency>
         </dependencies>
       </plugin>

@@ -30,6 +30,7 @@
       <groupId>net.kindleit</groupId>
       <artifactId>gae-runtime</artifactId>
       <version>${gae.version}</version>
+      <type>pom</type>
       <optional>true</optional>
     </dependency>
     
