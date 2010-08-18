@@ -286,6 +286,13 @@
         <groupId>net.kindleit</groupId>
         <artifactId>maven-gae-plugin</artifactId>
         <version>${gaePluginVersion}</version>
+        <dependencies>
+          <dependency>
+            <groupId>net.kindleit</groupId>
+            <artifactId>gae-runtime</artifactId>
+            <version>${gaePluginVersion}</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <!-- Upload application to the appspot automatically, during release:perform -->

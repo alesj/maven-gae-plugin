@@ -184,6 +184,7 @@
     <module>gae-archetype-jsp</module>
     <module>gae-archetype-gwt</module>
     <module>gae-archetype-wicket</module>
+    <module>gae-runtime</module>
   </modules>
 	
 </project>

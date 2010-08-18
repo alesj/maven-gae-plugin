@@ -91,6 +91,13 @@
         <configuration>
           <sdkDir>${dollar}{gae.home}</sdkDir>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>net.kindleit</groupId>
+            <artifactId>gae-runtime</artifactId>
+            <version>${gaePluginVersion}</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <!--
