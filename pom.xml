@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.kindleit</groupId>
   <artifactId>maven-gae-parent</artifactId>
-  <version>0.6.1-SNAPSHOT</version>
+  <version>0.7.0</version>
   <packaging>pom</packaging>
   
   <name>Maven GAE Parent POM</name>
@@ -105,9 +105,9 @@
   </profiles>
 
   <scm>
-    <connection>scm:svn:http://maven-gae-plugin.googlecode.com/svn/trunk</connection>
-    <developerConnection>scm:svn:https://maven-gae-plugin.googlecode.com/svn/trunk</developerConnection>
-    <url>http://code.google.com/p/maven-gae-plugin/source/browse/trunk</url>
+    <connection>scm:svn:http://maven-gae-plugin.googlecode.com/svn/tags/0.7.0</connection>
+    <developerConnection>scm:svn:https://maven-gae-plugin.googlecode.com/svn/tags/0.7.0</developerConnection>
+    <url>http://code.google.com/p/maven-gae-plugin/source/browse/tags/0.7.0</url>
   </scm>
 
   <repositories>
