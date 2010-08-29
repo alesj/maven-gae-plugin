@@ -101,6 +101,12 @@ public class StartGoal extends EngineGoalBase {
    */
   protected List<String> jvmFlags;
 
+  /** Optional javaAgent parameter prepended to the jvmFalgs.
+   *
+   * @parameter expression="${gae.javaAgent}"
+   */
+  protected String javaAgent;
+
   public void execute() throws MojoExecutionException, MojoFailureException {
     final List<String> arguments = new ArrayList<String>();
 
@@ -108,6 +114,10 @@ public class StartGoal extends EngineGoalBase {
     arguments.add("--port=" + port);
     if (disableUpdateCheck) {
       arguments.add("--disable_update_check");
+    }
+    if(javaAgent != null) {
+      arguments.add("--jvm_flag=-noverify");
+      arguments.add("--jvm_flag=-javaagent:" + javaAgent);
     }
     if (jvmFlags != null) {
       for (final String jvmFlag : jvmFlags) {
