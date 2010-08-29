@@ -24,7 +24,7 @@ import com.google.appengine.tools.admin.AppCfg;
 
 /**
  * Retrieves logs from Google's servers.
- * 
+ *
  * @author jpeynado@kindleit.net
  * @goal logs
  */
@@ -63,6 +63,5 @@ public class LogsGoal extends EngineGoalBase {
     assureSystemProperties();
     AppCfg.main(args.toArray(ARG_TYPE));
   }
+
 }
-
-
