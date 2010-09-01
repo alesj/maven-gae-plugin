@@ -4,7 +4,7 @@
 
 	<artifactId>gae-archetype-jsp</artifactId>
 	<packaging>maven-archetype</packaging>
-	<version>0.7.1</version>
+	<version>0.7.2-SNAPSHOT</version>
 
 	<name>Archetype - GAE-JSP</name>
 	<description>Archetype for creating maven-gae projects that uses jsp for the view</description>
@@ -12,7 +12,7 @@
 	<parent>
     <groupId>net.kindleit</groupId>
     <artifactId>maven-gae-parent</artifactId>
-    <version>0.7.1</version>
+    <version>0.7.2-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
