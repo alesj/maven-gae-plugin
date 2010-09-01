@@ -33,8 +33,6 @@ mvn $TASK:$TASK-file -Durl=$URL -Dfile=$GAE_SDK_PATH/lib/user/appengine-api-labs
  
 mvn $TASK:$TASK-file -Durl=$URL -Dfile=$GAE_SDK_PATH/lib/appengine-tools-api.jar -DgroupId=com.google.appengine -DartifactId=appengine-tools-sdk -Dversion=$SDK_VERSION -DgeneratePom=true -Dpackaging=jar
 
-mvn $TASK:$TASK-file -Durl=$URL -Dfile=$GAE_SDK_PATH/lib/impl/appengine-local-runtime.jar -DgroupId=com.google.appengine -DartifactId=appengine-local-runtime -Dversion=$SDK_VERSION -DgeneratePom=true -Dpackaging=jar
-
 mvn $TASK:$TASK-file -Durl=$URL -Dfile=$GAE_SDK_PATH/lib/impl/appengine-api-stubs.jar -DgroupId=com.google.appengine -DartifactId=appengine-api-stubs -Dversion=$SDK_VERSION -DgeneratePom=true -Dpackaging=jar
 
 mvn $TASK:$TASK-file -Durl=$URL -Dfile=$GAE_SDK_PATH/lib/testing/appengine-testing.jar -DgroupId=com.google.appengine -DartifactId=appengine-testing -Dversion=$SDK_VERSION -DgeneratePom=true -Dpackaging=jar

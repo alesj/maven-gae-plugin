@@ -3,7 +3,7 @@
   
   <groupId>net.kindleit</groupId>
   <artifactId>gae-runtime</artifactId>
-  <version>1.3.7</version>
+  <version>1.3.7.1</version>
   <packaging>pom</packaging>
   
   <name>Google App Engine Runtime Dependencies</name>
@@ -48,15 +48,15 @@
     
     <dependency>
       <groupId>com.google.appengine.orm</groupId>
-      <artifactId>datanucleus-appengine</artifactId>
-      <version>1.0.7</version>
-      <scope>runtime</scope>
+      <artifactId>datanucleus-core</artifactId>
+      <version>1.1.5</version>
     </dependency>
     
     <dependency>
       <groupId>com.google.appengine.orm</groupId>
-      <artifactId>datanucleus-core</artifactId>
-      <version>1.1.5</version>
+      <artifactId>datanucleus-appengine</artifactId>
+      <version>1.0.7</version>
+      <scope>runtime</scope>
     </dependency>
     
     <dependency>
@@ -67,13 +67,6 @@
     </dependency>
 
     <!-- App Engine Runtime Dependencies-->
-    <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-local-runtime</artifactId>
-      <version>1.3.7</version>
-      <scope>runtime</scope>
-    </dependency>
-    
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-tools-sdk</artifactId>
