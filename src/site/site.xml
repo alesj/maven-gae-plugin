@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="Maven GAE Plugin">
-  <!--
-  <bannerLeft>
-    <name>Maven GAE Plugin</name>
-    <src>http://maven.apache.org/images/apache-maven-project.png</src>
-    <href>http://code.google.com/p/maven-gae-plugin/</href>
-  </bannerLeft>
-  -->
   <bannerRight>
     <name>Maven GAE Plugin</name>
     <src>images/maven-gae-plugin-logo-small.png</src>
@@ -43,13 +36,6 @@
     <menu name="IDE integration">
       <item name="Eclipse" href="eclipse/google_plugin.html"/>
     </menu>
-    <!--
-    <menu name="Examples">
-      <item name="compile a GWT module" href="examples/compile.html"/>
-      <item name="generate async interfaces" href="examples/asyn.html"/>
-      <item name="generate i18n bundles interfaces" href="examples/i18n.html"/>
-    </menu>
-    -->
     <menu ref="reports"/>
   </body>
 </project>
