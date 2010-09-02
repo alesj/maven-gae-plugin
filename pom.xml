@@ -24,6 +24,15 @@
     <version>4</version>
   </parent>
   
+  <distributionManagement>
+    <site>
+      <id>com.kindleit.site</id>
+      <name>Kindled Project Documentation Sites</name>
+      <url>scpexe://sites.kitsd.com//var/www/sites.kitsd.com/htdocs/maven-gae-plugin</url>
+    </site>
+  </distributionManagement>
+  
+  
   <organization>
     <name>KindleIT</name>
     <url>http://www.kindleit.net</url>

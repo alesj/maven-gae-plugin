@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<faqs id="FAQ" title="Frequently Asked Questions">
+<faqs xmlns="http://maven.apache.org/FML/1.0.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/FML/1.0.1 http://maven.apache.org/xsd/fml-1.0.1.xsd"
+  id="FAQ"
+  title="Frequently Asked Questions"
+  toplink="false">
   <part id="General">
-    <faq id="question">
+    <faq id="jrebel">
       <question>How can I get my classes to refresh without having to restart?</question>
       <answer>
         <p>A good option is using the jrebel java agent.</p>
         <p>To use jrebel simply run the plugin with the gae.javaAgent option active:<br/>
         <code>mvn gae:run -Dgae.javaAgent=$REBEL_HOME/jrebel.jar</code></p>
       </answer>
+    </faq>
+    <faq id="gae-runtime">
       <question>Can I use the different versions of GAE with the same plugin?</question>
       <answer>
         <p>Yes, as of 0.7.0 the plugin's dependencies are non transitive and must always be specified</p>
         <p>More clearly: You can now simply change the version of gae-runtime</p> 
       </answer>
+    </faq>
+    <faq id="eclipse">
       <question>How to use Maven GAE Plugin with Google Eclipse Plugin?</question>
       <answer>
         <p>A very good article was written by David Chadler on how to set this up: 
         <a href="http://googlewebtoolkit.blogspot.com/2010/08/how-to-use-google-plugin-for-eclipse.html" title="How to Use Google Plugin for Eclipse with Maven">
           How to Use Google Plugin for Eclipse with Maven</a>
+        </p>
         <p>
           See the <a href="eclipse/google_plugin.html">Eclipse section</a>.
         </p>
