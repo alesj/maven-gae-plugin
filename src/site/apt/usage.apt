@@ -15,10 +15,9 @@ Configuring Maven GAE Plugin
 mvn archetype:create\
  -DarchetypeGroupId=net.kindleit\
  -DarchetypeArtifactId=gae-archetype-gwt\
- -DarchetypeVersion=0.5.0\
+ -DarchetypeVersion=0.7.0\
  -DgroupId=your.groupId\
- -DartifactId=your-artifactId\
- -DremoteRepositories=http://maven-gae-plugin.googlecode.com/svn/repository
+ -DartifactId=your-artifactId
 +---+
 
 * Patching existing project.
@@ -35,44 +34,17 @@ mvn archetype:create\
                 <groupId>net.kindleit</groupId>
                 <artifactId>maven-gae-plugin</artifactId>
                 <version>[plugin version]</version>
+                <dependencies>
+                  <dependency>
+                    <groupId>net.kindleit</groupId>
+                    <artifactId>gae-runtime</artifactId>
+                    <version>${gae.version}</version>
+                    <type>pom</type>
+                  </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
-    [...]
-</project>
-+---+
-
- However, currently, GAE SDK (and thus maven-gae-plugin) require some artifacts, which are not
- available in any of the public repositories 'as is'. So it doesn't make much sense to push
- maven-gae-plugin to the central Maven repository either.
-
- For now, you have to add maven-gae-plugin's repository both as the dependency and
- the plugin repository like this:
-
-+---+
-<project>
-    [...]
-    <repositories>
-        [...]
-        <repository>
-            <id>maven-gae-plugin-repo</id>
-            <name>maven-gae-plugin repository</name>
-            <url>
-                http://maven-gae-plugin.googlecode.com/svn/repository
-            </url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        [...]
-        <pluginRepository>
-            <id>maven-gae-plugin-repo</id>
-            <name>maven-gae-plugin repository</name>
-            <url>
-                http://maven-gae-plugin.googlecode.com/svn/repository
-            </url>
-        </pluginRepository>
-    </pluginRepositories>
     [...]
 </project>
 +---+

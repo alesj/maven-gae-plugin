@@ -6,11 +6,6 @@
 Using the Google Eclipse Plugin
 
 
-  The {{{http://code.google.com/intl/en/eclipse/}Google Eclipse Plugin}} is the Google's recommended 
-  approach for working with Google App Engine projects, unfortunately, at the time of writing, it is not 
-  suitable for integration with Maven (See the 
-  {{{http://groups.google.com/group/maven-gae-plugin/browse_thread/thread/497e2dd1ee252650}discussion thread}}
-  on this topic). 
+  The google team is working hard on integration the Google Eclipse Plugin with Maven.
   
-  We, however, are eager to get Google Eclipse Plugin and Maven working together and will provide an example
-  project setup as soon as it is possible. 
+  Please refer to {{{http://googlewebtoolkit.blogspot.com/2010/08/how-to-use-google-plugin-for-eclipse.html}this post}} for more details.
