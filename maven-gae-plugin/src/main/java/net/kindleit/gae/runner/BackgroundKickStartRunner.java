@@ -110,6 +110,11 @@ final class BackgroundKickStartRunner extends KickStartRunner {
       }
     };
 
+    if (log.isDebugEnabled()) {
+      log.debug("Forking executable: " + commandline.getExecutable());
+      log.debug("Command line: " + commandline.toString());
+    }
+
     return new Thread(new Runnable() {
       public void run() {
         try {
