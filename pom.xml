@@ -191,6 +191,7 @@
   <modules>
     <module>maven-gae-plugin</module>
     <module>gae-archetype-jsp</module>
+    <module>gae-archetype-jsf</module>
     <module>gae-archetype-gwt</module>
     <module>gae-archetype-wicket</module>
     <module>gae-runtime</module>
