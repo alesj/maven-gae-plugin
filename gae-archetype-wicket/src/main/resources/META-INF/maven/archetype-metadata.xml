@@ -3,7 +3,7 @@
   xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd"
-  name="jsp-gae-archetype">
+  name="gae-archetype-wicket">
   <requiredProperties>
     <requiredProperty key="artifactId" />
     <requiredProperty key="groupId" />
@@ -11,10 +11,12 @@
     <requiredProperty key="gaeVersion">
       <defaultValue>${gae.version}</defaultValue>
     </requiredProperty>
-    <requiredProperty key="gaePluginVersion" />
+    <requiredProperty key="gaePluginVersion">
+      <defaultValue>${project.version}</defaultValue>
+    </requiredProperty>
     <requiredProperty key="gaeApplicationName" />
     <requiredProperty key="gaeApplicationVersion">
-      <defaultValue>0</defaultValue>
+      <defaultValue>test</defaultValue>
     </requiredProperty>
   </requiredProperties>
   <fileSets>

@@ -21,15 +21,59 @@
   </pluginRepositories>
   
 	<dependencies>
+  
+    <!-- JSF dependencies -->
+    <dependency>
+      <groupId>javax.faces</groupId>
+      <artifactId>jsf-impl</artifactId>
+      <version>2.0.2-FCS</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.facelets</groupId>
+      <artifactId>jsf-facelets</artifactId>
+      <version>1.1.14</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.el</groupId>
+      <artifactId>el-api</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>el-impl</groupId>
+      <artifactId>el-impl</artifactId>
+      <version>1.1</version>
+    </dependency>
+    
+    <!-- GAE and JSF2 -->
+    <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>serializer</artifactId>
+      <version>2.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>xalan</artifactId>
+      <version>2.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.9.1</version>
+    </dependency>
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <version>1.3.04</version>
+    </dependency>
+    
 
     <!-- Google App Engine meta-package -->
     <dependency>
       <groupId>net.kindleit</groupId>
       <artifactId>gae-runtime</artifactId>
-      <version>1.3.7.1</version>
+      <version>${gae.version}</version>
       <type>pom</type>
     </dependency>
-    
 		<dependency>
 			<groupId>javax.transaction</groupId>
 			<artifactId>jta</artifactId>
@@ -45,30 +89,6 @@
 			<artifactId>geronimo-servlet_2.5_spec</artifactId>
 			<version>1.2</version>
 			<scope>provided</scope>
-		</dependency>
-
-		<!--
-			Make use of JSP tags. Remove, if you don't use JSPs
-		-->
-		<dependency>
-			<artifactId>standard</artifactId>
-			<groupId>taglibs</groupId>
-			<version>1.1.2</version>
-			<type>jar</type>
-			<scope>runtime</scope>
-		</dependency>
-
-		<!-- These dependencies are here just for enabling logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>0.9.24</version>
 		</dependency>
 
 		<!-- Test scope -->
