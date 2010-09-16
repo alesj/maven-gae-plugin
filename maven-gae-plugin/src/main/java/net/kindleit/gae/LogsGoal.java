@@ -32,7 +32,7 @@ public class LogsGoal extends EngineGoalBase {
 
   /** Log report output file.
    *
-   * @parameter expression="${project.build.outputDirectory}/gae.log"
+   * @parameter expression="${project.build.directory}/gae.log"
    */
   protected File outputFile;
 
