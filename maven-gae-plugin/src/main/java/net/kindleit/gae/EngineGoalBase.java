@@ -36,6 +36,12 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 
 import com.google.appengine.tools.admin.AppCfg;
 
@@ -43,7 +49,7 @@ import com.google.appengine.tools.admin.AppCfg;
  *
  * @author rhansen@kindleit.net
  */
-public abstract class EngineGoalBase extends AbstractMojo {
+public abstract class EngineGoalBase extends AbstractMojo implements Contextualizable {
 
   private static final String GAE_PROPS = "gae.properties";
 
@@ -51,6 +57,14 @@ public abstract class EngineGoalBase extends AbstractMojo {
     "Interrupted waiting for process supervisor thread to finish";
 
   protected static final String[] ARG_TYPE = new String[0];
+
+  /**
+   * Plexus container, needed to manually lookup components.
+   *
+   * To be able to use Password Encryption
+   * http://maven.apache.org/guides/mini/guide-encryption.html
+   */
+  protected PlexusContainer container;
 
   /** The Maven settings reference.
    *
@@ -72,7 +86,7 @@ public abstract class EngineGoalBase extends AbstractMojo {
   * @parameter expression="${gae.home}" default-value="${settings.localRepository}/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}"
   * @required
   */
- protected String sdkDir;
+  protected String sdkDir;
 
   /** Split large jar files (> 10M) into smaller fragments.
    *
@@ -150,6 +164,7 @@ public abstract class EngineGoalBase extends AbstractMojo {
 
   protected Properties gaeProperties;
 
+
   public EngineGoalBase() {
     gaeProperties = new Properties();
     try {
@@ -157,6 +172,11 @@ public abstract class EngineGoalBase extends AbstractMojo {
     } catch (final IOException e) {
       throw new RuntimeException("Unable to load version", e);
     }
+  }
+
+
+  public void contextualize(Context context) throws ContextException {
+      this.container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);
   }
 
   protected boolean hasServerSettings() {
@@ -186,8 +206,14 @@ public abstract class EngineGoalBase extends AbstractMojo {
     getLog().debug("execute AppCfg " + args.toString());
 
     if (hasServerSettings() && settings.getServer(serverId).getPassword() != null) {
-        forkPasswordExpectThread(args.toArray(ARG_TYPE),
-            settings.getServer(serverId).getPassword());
+    	 String password = settings.getServer(serverId).getPassword();
+         try {
+             SecDispatcher securityDispatcher = (SecDispatcher) container.lookup(SecDispatcher.ROLE, "maven");
+             password = securityDispatcher.decrypt(password);
+         } catch (Exception e) {
+             getLog().warn("security features are disabled. Cannot find plexus component " + SecDispatcher.ROLE + ":maven", e);
+         }
+         forkPasswordExpectThread(args.toArray(ARG_TYPE), password);
     } else {
         AppCfg.main(args.toArray(ARG_TYPE));
     }
