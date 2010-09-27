@@ -36,12 +36,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
-import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 
 import com.google.appengine.tools.admin.AppCfg;
 
@@ -49,7 +43,7 @@ import com.google.appengine.tools.admin.AppCfg;
  *
  * @author rhansen@kindleit.net
  */
-public abstract class EngineGoalBase extends AbstractMojo implements Contextualizable {
+public abstract class EngineGoalBase extends AbstractMojo {
 
   private static final String GAE_PROPS = "gae.properties";
 
@@ -57,14 +51,6 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
     "Interrupted waiting for process supervisor thread to finish";
 
   protected static final String[] ARG_TYPE = new String[0];
-
-  /**
-   * Plexus container, needed to manually lookup components.
-   *
-   * To be able to use Password Encryption
-   * http://maven.apache.org/guides/mini/guide-encryption.html
-   */
-  protected PlexusContainer container;
 
   /** The Maven settings reference.
    *
@@ -174,11 +160,6 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
     }
   }
 
-
-  public void contextualize(Context context) throws ContextException {
-      this.container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);
-  }
-
   protected boolean hasServerSettings() {
       if (serverId == null) {
           return false;
@@ -205,18 +186,15 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
 
     getLog().debug("execute AppCfg " + args.toString());
 
-    if (hasServerSettings() && settings.getServer(serverId).getPassword() != null) {
-    	 String password = settings.getServer(serverId).getPassword();
-         try {
-             SecDispatcher securityDispatcher = (SecDispatcher) container.lookup(SecDispatcher.ROLE, "maven");
-             password = securityDispatcher.decrypt(password);
-         } catch (Exception e) {
-             getLog().warn("security features are disabled. Cannot find plexus component " + SecDispatcher.ROLE + ":maven", e);
-         }
-         forkPasswordExpectThread(args.toArray(ARG_TYPE), password);
-    } else {
-        AppCfg.main(args.toArray(ARG_TYPE));
+    if (hasServerSettings()) {
+      final String password = settings.getServer(serverId).getPassword();
+      if (password != null) {
+       forkPasswordExpectThread(args.toArray(ARG_TYPE), password);
+       return;
+      }
     }
+
+    AppCfg.main(args.toArray(ARG_TYPE));
   }
 
   private void forkPasswordExpectThread(final String[] args, final String password) {

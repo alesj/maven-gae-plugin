@@ -4,7 +4,7 @@
   <artifactId>maven-gae-parent</artifactId>
   <version>0.7.2-SNAPSHOT</version>
   <packaging>pom</packaging>
-  
+
   <name>Maven GAE Parent POM</name>
   <description>Parent POM for the Maven - Google App Engine Integration artifacts.</description>
   <inceptionYear>2009</inceptionYear>
@@ -17,13 +17,13 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  
+
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>4</version>
   </parent>
-  
+
   <distributionManagement>
     <site>
       <id>com.kindleit.site</id>
@@ -31,18 +31,23 @@
       <url>scpexe://sites.kitsd.com//var/www/sites.kitsd.com/htdocs/maven-gae-plugin</url>
     </site>
   </distributionManagement>
-  
-  
+
+
   <organization>
     <name>KindleIT</name>
     <url>http://www.kindleit.net</url>
   </organization>
-   
+
   <developers>
     <developer>
       <id>kryptt</id>
       <name>Rodolfo Hansen</name>
       <email>kryptt@gmail.com</email>
+    </developer>
+    <developer>
+      <id>tleese22</id>
+      <name>Taylor Leese</name>
+      <email>tleese22@gmail.com</email>
     </developer>
     <developer>
       <id>mangrar</id>
@@ -54,7 +59,7 @@
       <name>Andris Rauda</name>
       <email>androns@gmail.com</email>
     </developer>
-  </developers>  
+  </developers>
 
   <mailingLists>
     <mailingList>
@@ -65,7 +70,7 @@
       <archive>http://groups.google.com/group/maven-gae-plugin</archive>
     </mailingList>
   </mailingLists>
-  
+
   <issueManagement>
     <system>Google Code</system>
     <url>http://code.google.com/p/maven-gae-plugin/issues/list</url>
@@ -83,7 +88,7 @@
        ${gae.base}/appengine-java-sdk-${gae.version}
     </gae.home>
   </properties>
-  
+
   <profiles>
     <profile>
       <id>release-signing</id>
@@ -133,9 +138,9 @@
       <url>http://download.java.net/maven/2/</url>
       <releases><enabled>true</enabled></releases>
       <snapshots><enabled>true</enabled></snapshots>
-    </repository>   
+    </repository>
   </repositories>
-  
+
   <build>
     <extensions>
       <extension>
@@ -177,17 +182,17 @@
       </plugin>
     </plugins>
   </build>
-    
+
   <reporting>
     <plugins>
-      <plugin> 
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
         <version>2.5.1</version>
       </plugin>
     </plugins>
   </reporting>
-  
+
   <modules>
     <module>maven-gae-plugin</module>
     <module>gae-archetype-jsp</module>
@@ -196,5 +201,5 @@
     <module>gae-archetype-wicket</module>
     <module>gae-runtime</module>
   </modules>
-	
+
 </project>
