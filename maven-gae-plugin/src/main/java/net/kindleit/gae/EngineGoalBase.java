@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +37,11 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
 import com.google.appengine.tools.admin.AppCfg;
 
@@ -43,7 +49,9 @@ import com.google.appengine.tools.admin.AppCfg;
  *
  * @author rhansen@kindleit.net
  */
-public abstract class EngineGoalBase extends AbstractMojo {
+public abstract class EngineGoalBase extends AbstractMojo implements Contextualizable {
+
+  private static final String SECURITY_DISPATCHER_CLASS_NAME = "org.sonatype.plexus.components.sec.dispatcher.SecDispatcher";
 
   private static final String GAE_PROPS = "gae.properties";
 
@@ -51,6 +59,14 @@ public abstract class EngineGoalBase extends AbstractMojo {
     "Interrupted waiting for process supervisor thread to finish";
 
   protected static final String[] ARG_TYPE = new String[0];
+
+  /**
+   * Plexus container, needed to manually lookup components.
+   *
+   * To be able to use Password Encryption
+   * http://maven.apache.org/guides/mini/guide-encryption.html
+   */
+  protected PlexusContainer container;
 
   /** The Maven settings reference.
    *
@@ -160,6 +176,11 @@ public abstract class EngineGoalBase extends AbstractMojo {
     }
   }
 
+
+  public void contextualize(Context context) throws ContextException {
+      this.container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);
+  }
+
   protected boolean hasServerSettings() {
       if (serverId == null) {
           return false;
@@ -187,68 +208,13 @@ public abstract class EngineGoalBase extends AbstractMojo {
     getLog().debug("execute AppCfg " + args.toString());
 
     if (hasServerSettings()) {
-      final String password = settings.getServer(serverId).getPassword();
-      if (password != null) {
-       forkPasswordExpectThread(args.toArray(ARG_TYPE), password);
-       return;
-      }
+      forkPasswordExpectThread(args.toArray(ARG_TYPE),
+          decryptPassword(settings.getServer(serverId).getPassword()));
+      return;
     }
 
     AppCfg.main(args.toArray(ARG_TYPE));
-  }
 
-  private void forkPasswordExpectThread(final String[] args, final String password) {
-      getLog().info("Use Settings configuration from server id {" + serverId + "}");
-      // Parent for all threads created by AppCfg
-      final ThreadGroup threads = new ThreadGroup("AppCfgThreadGroup");
-
-       // Main execution Thread that belong to ThreadGroup threads
-      final Thread thread = new Thread(threads, "AppCfgMainThread") {
-
-          @Override
-          public void run() {
-              final PrintStream outOrig = System.out;
-              final InputStream inOrig = System.in;
-
-              final PipedInputStream inReplace = new PipedInputStream();
-              OutputStream stdin;
-              try {
-                stdin = new PipedOutputStream(inReplace);
-              } catch (final IOException e) {
-                  getLog().error("Unable to redirect input", e);
-                  return;
-              }
-              System.setIn(inReplace);
-
-              final BufferedWriter stdinWriter = new BufferedWriter(new OutputStreamWriter(stdin));
-
-              System.setOut(new PrintStream(new PasswordExpectOutputStream(threads, outOrig, new Runnable() {
-                public void run() {
-                    try {
-                        stdinWriter.write(password);
-                        stdinWriter.newLine();
-                        stdinWriter.flush();
-                    } catch (final IOException e) {
-                        getLog().error("Unable to enter password", e);
-                    }
-                }}), true));
-
-              try {
-                  AppCfg.main(args);
-              } catch (final Throwable e) {
-                  getLog().error("Unable to execute AppCfg", e);
-              } finally {
-                  System.setOut(outOrig);
-                  System.setIn(inOrig);
-              }
-          }
-      };
-      thread.start();
-      try {
-          thread.join();
-      } catch (final InterruptedException e) {
-          getLog().error(INTERRUPTED_EXCEPTION, e);
-      }
   }
 
   /** Groups alterations to System properties for the proper execution
@@ -310,6 +276,80 @@ public abstract class EngineGoalBase extends AbstractMojo {
     addStringOption(args, "--server=", uploadServer);
 
     return args;
+  }
+
+  private void forkPasswordExpectThread(final String[] args, final String password) {
+    getLog().info("Use Settings configuration from server id {" + serverId + "}");
+    // Parent for all threads created by AppCfg
+    final ThreadGroup threads = new ThreadGroup("AppCfgThreadGroup");
+
+     // Main execution Thread that belong to ThreadGroup threads
+    final Thread thread = new Thread(threads, "AppCfgMainThread") {
+
+        @Override
+        public void run() {
+            final PrintStream outOrig = System.out;
+            final InputStream inOrig = System.in;
+
+            final PipedInputStream inReplace = new PipedInputStream();
+            OutputStream stdin;
+            try {
+              stdin = new PipedOutputStream(inReplace);
+            } catch (final IOException e) {
+                getLog().error("Unable to redirect input", e);
+                return;
+            }
+            System.setIn(inReplace);
+
+            final BufferedWriter stdinWriter = new BufferedWriter(new OutputStreamWriter(stdin));
+
+            System.setOut(new PrintStream(new PasswordExpectOutputStream(threads, outOrig, new Runnable() {
+              public void run() {
+                  try {
+                      stdinWriter.write(password);
+                      stdinWriter.newLine();
+                      stdinWriter.flush();
+                  } catch (final IOException e) {
+                      getLog().error("Unable to enter password", e);
+                  }
+              }}), true));
+
+            try {
+                AppCfg.main(args);
+            } catch (final Throwable e) {
+                getLog().error("Unable to execute AppCfg", e);
+            } finally {
+                System.setOut(outOrig);
+                System.setIn(inOrig);
+            }
+        }
+    };
+    thread.start();
+    try {
+        thread.join();
+    } catch (final InterruptedException e) {
+        getLog().error(INTERRUPTED_EXCEPTION, e);
+    }
+  }
+
+  private String decryptPassword(String password) {
+    if (password != null) {
+      try {
+        final Class<?> securityDispatcherClass = container.getClass()
+            .getClassLoader().loadClass(SECURITY_DISPATCHER_CLASS_NAME);
+        final Object securityDispatcher = container.lookup(
+            SECURITY_DISPATCHER_CLASS_NAME, "maven");
+        final Method decrypt = securityDispatcherClass.getMethod("decrypt",
+            String.class);
+
+        return (String) decrypt.invoke(securityDispatcher, password);
+
+      } catch (Exception e) {
+        getLog().warn("security features are disabled. Cannot find plexus security dispatcher", e);
+      }
+    }
+    getLog().debug("password could not be decrypted");
+    return password;
   }
 
   private void addEmailOption(final List<String> args) {
