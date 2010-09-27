@@ -42,8 +42,7 @@ public class UnpackGoal extends EngineGoalBase {
 
   /**
    * Used to look up Artifacts in the remote repository.
-   * @parameter expression=
-   *            "${component.org.apache.maven.artifact.factory.ArtifactFactory}"
+   * @component role="org.apache.maven.artifact.factory.ArtifactFactory" 
    * @required
    * @readonly
    */
@@ -51,8 +50,7 @@ public class UnpackGoal extends EngineGoalBase {
 
   /**
    * Used to look up Artifacts in the remote repository.
-   * @parameter expression=
-   *            "${component.org.apache.maven.artifact.resolver.ArtifactResolver}"
+   * @component role="org.apache.maven.artifact.resolver.ArtifactResolver"
    * @required
    * @readonly
    */
