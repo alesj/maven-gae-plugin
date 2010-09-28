@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.logging.Log;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
@@ -88,7 +89,7 @@ final class BackgroundKickStartRunner extends KickStartRunner {
       final String monitorKey, final List<String> args) {
     final String javaExe = System.getProperty("java.home") + File.separator
       + "bin" + File.separator + "java";
-    final Commandline commandline = new Commandline(javaExe);
+    final Commandline commandline = new Commandline(StringUtils.quoteAndEscape(javaExe, '"'));
     final String classPath =
       System.getProperty("java.class.path") + File.pathSeparator + pluginPath;
     commandline.createArg().setValue("-ea");
