@@ -84,9 +84,11 @@ final class BackgroundKickStartRunner extends KickStartRunner {
     }
   }
 
-  private Thread setupCommandLine(final int monitorPort, final String monitorKey,
-      final List<String> args) {
-    final Commandline commandline = new Commandline("java");
+  private Thread setupCommandLine(final int monitorPort,
+      final String monitorKey, final List<String> args) {
+    final String javaExe = System.getProperty("java.home") + File.separator
+      + "bin" + File.separator + "java";
+    final Commandline commandline = new Commandline(javaExe);
     final String classPath =
       System.getProperty("java.class.path") + File.pathSeparator + pluginPath;
     commandline.createArg().setValue("-ea");
