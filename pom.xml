@@ -116,6 +116,18 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>with-gae-runtime</id>
+      <activation>
+        <property>
+          <name>with-gae-runtime</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <modules>
+        <module>gae-runtime</module>
+      </modules>
+    </profile>
   </profiles>
 
   <scm>
@@ -199,7 +211,6 @@
     <module>gae-archetype-jsf</module>
     <module>gae-archetype-gwt</module>
     <module>gae-archetype-wicket</module>
-    <module>gae-runtime</module>
   </modules>
 
 </project>
