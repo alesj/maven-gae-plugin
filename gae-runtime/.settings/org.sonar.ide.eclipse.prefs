@@ -1,0 +1,7 @@
+#Thu Oct 14 11:50:28 MDT 2010
+eclipse.preferences.version=1
+projectArtifactId=gae-runtime
+projectBranch=
+projectGroupId=net.kindleit
+sonarServerUrl=http\://localhost\:9000
+version=1

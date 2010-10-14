@@ -117,15 +117,32 @@
       </build>
     </profile>
     <profile>
-      <id>with-gae-runtime</id>
+      <id>enable-runtime</id>
       <activation>
         <property>
-          <name>with-gae-runtime</name>
+          <name>enable-runtime</name>
           <value>true</value>
         </property>
       </activation>
       <modules>
         <module>gae-runtime</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>enable-modules</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>enable-modules</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <modules>
+        <module>maven-gae-plugin</module>
+        <module>gae-archetype-jsp</module>
+        <module>gae-archetype-jsf</module>
+        <module>gae-archetype-gwt</module>
+        <module>gae-archetype-wicket</module>
       </modules>
     </profile>
   </profiles>
@@ -204,13 +221,5 @@
       </plugin>
     </plugins>
   </reporting>
-
-  <modules>
-    <module>maven-gae-plugin</module>
-    <module>gae-archetype-jsp</module>
-    <module>gae-archetype-jsf</module>
-    <module>gae-archetype-gwt</module>
-    <module>gae-archetype-wicket</module>
-  </modules>
 
 </project>
