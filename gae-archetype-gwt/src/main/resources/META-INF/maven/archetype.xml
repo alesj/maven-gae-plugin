@@ -24,7 +24,6 @@
   </resources>
   <testSources>
     <source>src/test/java/com/google/apphosting/api/MockEnvironment.java</source>
-    <source>src/test/java/net/kindleit/gae/example/server/LocalServiceTest.java</source>
     <source>src/test/java/net/kindleit/gae/example/server/LocalDatastoreTest.java</source>
     <source>src/test/java/net/kindleit/gae/example/server/MessageRepositoryTest.java</source>
   </testSources>
