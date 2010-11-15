@@ -9,9 +9,6 @@
   <version>${version}</version>
   <packaging>war</packaging>
 
-  <name>${name}</name>
-  <description>${description}</description>
-
   <pluginRepositories>
     <pluginRepository>
       <id>maven-gae-plugin-repo</id>
@@ -29,6 +26,13 @@
       <version>${gae.version}</version>
       <type>pom</type>
     </dependency>
+
+        <dependency>
+            <groupId>com.google.appengine.orm</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>${dollar}{datanucleus.version}</version>
+            <scope>runtime</scope>
+        </dependency>
     
 		<dependency>
 			<groupId>javax.transaction</groupId>
@@ -103,6 +107,18 @@
 			<version>${dollar}{gae.version}</version>
 			<scope>test</scope>
 		</dependency>
+        
+        <dependency>
+            <groupId>javax.jdo</groupId>
+            <artifactId>jdo2-api</artifactId>
+            <version>2.3-eb</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>transaction-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -136,7 +152,7 @@
 					<dependency>
 						<groupId>org.datanucleus</groupId>
 						<artifactId>datanucleus-core</artifactId>
-						<version>1.1.5</version>
+						<version>${dollar}{datanucleus.version}</version>
 						<exclusions>
 							<exclusion>
 								<groupId>javax.transaction</groupId>
@@ -147,7 +163,7 @@
 					<dependency>
 						<groupId>org.datanucleus</groupId>
 						<artifactId>datanucleus-rdbms</artifactId>
-						<version>1.1.5</version>
+						<version>${dollar}{datanucleus.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.datanucleus</groupId>
@@ -235,6 +251,8 @@
 			Upload to http://test.latest.<applicationName>.appspot.com by default
 		-->
 		<gae.application.version>test</gae.application.version>
+
+        <datanucleus.version>1.1.5</datanucleus.version>
 	</properties>
 
 	<profiles>

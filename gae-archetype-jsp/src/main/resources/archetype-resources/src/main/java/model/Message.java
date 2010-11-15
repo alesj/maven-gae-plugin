@@ -2,7 +2,7 @@
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
 
-package ${package};
+package ${package}.model;
 
 import java.io.Serializable;
 

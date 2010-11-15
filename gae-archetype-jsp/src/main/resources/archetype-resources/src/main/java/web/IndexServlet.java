@@ -2,7 +2,7 @@
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
 
-package ${package};
+package ${package}.web;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.kindleit.gae.example.model.Message;
-import net.kindleit.gae.example.server.MessageRepository;
+import ${package}.model.Message;
+import ${package}.server.MessageRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

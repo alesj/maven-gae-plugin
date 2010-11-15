@@ -8,7 +8,7 @@
     <servlet>
         <servlet-name>IndexServlet</servlet-name>
         <servlet-class>
-            net.kindleit.gae.example.web.IndexServlet
+            ${package}.web.IndexServlet
         </servlet-class>
     </servlet>
 
