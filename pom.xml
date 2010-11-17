@@ -143,6 +143,7 @@
         <module>gae-archetype-jsf</module>
         <module>gae-archetype-gwt</module>
         <module>gae-archetype-wicket</module>
+        <module>gae-archetype-objectify-jsp</module>
       </modules>
     </profile>
   </profiles>

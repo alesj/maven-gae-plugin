@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="Maven GAE Plugin">
   <bannerRight>
     <name>Maven GAE Plugin</name>
@@ -6,9 +6,9 @@
     <href>index.html</href>
   </bannerRight>
   <poweredBy>
-    <logo name="Built By Maven" href="http://maven.apache.org" 
+    <logo name="Built By Maven" href="http://maven.apache.org"
           img="http://maven.apache.org/images/logos/maven-feather.png" />
-    <logo name="Development Accelerated By JRebel" href="http://www.zeroturnaround.com/javarebel/" 
+    <logo name="Development Accelerated By JRebel" href="http://www.zeroturnaround.com/javarebel/"
           img="images/zero-turnaround-logo.gif" />
   </poweredBy>
   <body>
@@ -29,9 +29,11 @@
     <menu name="Modules">
       <item name="Plugin" href="maven-gae-plugin"/>
       <item name="GAE Runtime" href="gae-runtime"/>
-      <item name="JSP Archetype" href="gae-archetype-jsp"/>
-      <item name="GWT Archetype" href="gae-archetype-gwt"/>
+      <item name="JSP with JDO Archetype" href="gae-archetype-jsp"/>
+      <item name="GWT with JDO Archetype" href="gae-archetype-gwt"/>
+      <item name="JSF with JDO Archetype" href="gae-archetype-jsf"/>
       <item name="Wicket Archetype" href="gae-archetype-wicket"/>
+      <item name="JSP with Objectify Archetype" href="gae-archetype-objectify-jsp"/>
     </menu>
     <menu name="IDE integration">
       <item name="Eclipse" href="eclipse/google_plugin.html"/>

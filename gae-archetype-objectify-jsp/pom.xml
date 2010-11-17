@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+    <groupId>net.kindleit</groupId>
+    <artifactId>maven-gae-parent</artifactId>
+    <version>0.7.3-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+
+	<artifactId>gae-archetype-objectify-jsp</artifactId>
+	<packaging>maven-archetype</packaging>
+
+	<name>Archetype - GAE-JSP</name>
+	<description>Archetype for creating maven-gae projects that uses jsp for the view and Objectify for the ORM.</description>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes><include>**/archetype-metadata.xml</include></includes>
+      </resource>
+    </resources>    
+  </build>
+
+</project>
+
