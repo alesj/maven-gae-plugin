@@ -49,7 +49,7 @@ mvn archetype:create\
 </project>
 +---+
 
- See the {{{examples/index.html}examples}} page for tips on configuring
+ See the {{{./examples/index.html}examples}} page for tips on configuring
  the persistence, it's unit-testing and GWT.
 
- See the {{{examples/passwordPrompt.html}settings}} page for How-To configure maven with your gae account and password.
+ See the {{{./examples/passwordPrompt.html}settings}} page for How-To configure maven with your gae account and password.

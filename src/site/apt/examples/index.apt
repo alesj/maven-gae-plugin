@@ -88,13 +88,13 @@ Examples
 </project>
 +---+
 
- Besides, you have to set up DataNucleus' "enhancement" using the 
+ Besides, you have to set up DataNucleus' "enhancement" using the
  {{{http://www.datanucleus.org/products/accessplatform_1_0/guides/maven2/index.html}maven-datanucleus-plugin}}
  like this:
 
 +---+
 <project>
-    [...] 
+    [...]
     <plugins>
         <!--
             This plug-in "enhances" your domain model objects (i.e.
@@ -156,7 +156,7 @@ Examples
 * Unit-testing persistence.
 
  Unit-testing the persistence layer requires some additional dependencies:
- 
+
 +---+
 <project>
     [...]
@@ -191,26 +191,34 @@ Examples
 </project>
 +---+
 
- You also need to create mock environment class like 
+ You also need to create mock environment class like
  {{{http://maven-gae-plugin.googlecode.com/svn/example/gwt-persistence-app/src/test/java/com/google/apphosting/api/MockEnvironment.java}this}}.
 
  Again, see the {{{http://code.google.com/appengine/docs/java/howto/unittesting.html}Google App Engine Documentation - Unit-testing}} for more details.
- 
+
 * Using GWT.
 
  GWT compilation can be done by using Codehaus'
- {{{http://mojo.codehaus.org/gwt-maven-plugin/index.html}gwt-maven-plugin}}. Please refer their own 
+ {{{http://mojo.codehaus.org/gwt-maven-plugin/index.html}gwt-maven-plugin}}. Please refer their own
  documentation, as it is very well written and running GWT on GAE does not require any additional steps.
 
 * Archetypes.
 
  There are currently three archetypes we maintain:
- 
+
  * Plain JSP based example:
 
 +---+
 mvn archetype:generate -DarchetypeGroupId=net.kindleit -DarchetypeArtifactId=gae-archetype-jsp \
- -DarchetypeVersion=0.6.0 -DgroupId=com.myapp.test -DartifactId=testapp \
+ -DarchetypeVersion=0.7.3 -DgroupId=com.myapp.test -DartifactId=testapp \
+ -DarchetypeRepository=http://maven-gae-plugin.googlecode.com/svn/repository
++---+
+
+ * Objectify JSP based example:
+
++---+
+mvn archetype:generate -DarchetypeGroupId=net.kindleit -DarchetypeArtifactId=gae-archetype-objectify-jsp \
+ -DarchetypeVersion=0.7.3 -DgroupId=com.myapp.test -DartifactId=testapp \
  -DarchetypeRepository=http://maven-gae-plugin.googlecode.com/svn/repository
 +---+
 
@@ -218,7 +226,15 @@ mvn archetype:generate -DarchetypeGroupId=net.kindleit -DarchetypeArtifactId=gae
 
 +---+
 mvn archetype:generate -DarchetypeGroupId=net.kindleit -DarchetypeArtifactId=gae-archetype-wicket \
- -DarchetypeVersion=0.6.0 -DgroupId=com.myapp.test -DartifactId=testapp \
+ -DarchetypeVersion=0.7.3 -DgroupId=com.myapp.test -DartifactId=testapp \
+ -DarchetypeRepository=http://maven-gae-plugin.googlecode.com/svn/repository
++---+
+
+ * JSF based example
+
++---+
+mvn archetype:generate -DarchetypeGroupId=net.kindleit -DarchetypeArtifactId=gae-archetype-jsf \
+ -DarchetypeVersion=0.7.3 -DgroupId=com.myapp.test -DartifactId=testapp \
  -DarchetypeRepository=http://maven-gae-plugin.googlecode.com/svn/repository
 +---+
 
@@ -226,6 +242,6 @@ mvn archetype:generate -DarchetypeGroupId=net.kindleit -DarchetypeArtifactId=gae
 
 +---+
 mvn archetype:generate -DarchetypeGroupId=net.kindleit -DarchetypeArtifactId=gae-archetype-gwt \
-  -DarchetypeVersion=0.6.0 -DgroupId=com.myapp.test -DartifactId=testapp \
+  -DarchetypeVersion=0.7.3 -DgroupId=com.myapp.test -DartifactId=testapp \
   -DarchetypeRepository=http://maven-gae-plugin.googlecode.com/svn/repository
 +---+
