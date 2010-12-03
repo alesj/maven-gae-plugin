@@ -14,16 +14,29 @@
  */
 package net.kindleit.gae;
 
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * Extends the UpdateGoal incorporating it correctly into the default lifecycle
+ * Uploads a WAR project on to Google's servers.
  *
  * @author rhansen@kindleit.net
  *
  * @goal deploy
- * @phase deploy
  * @requiresOnline
+ * @since 0.7.4
  */
-public class DeployGoal extends UpdateGoal {
+public class UpdateGoal extends EngineGoalBase {
 
+  /** Create or update an app version.
+   * This goal uploads your web application to the google app engine server.
+   * @throws MojoExecutionException Unthrown
+   * @throws MojoFailureException Unthrown
+   */
+  public void execute() throws MojoExecutionException, MojoFailureException {
+    getLog().info("Updating Google App Engine Server...");
+    runAppCfg("update", appDir);
+  }
 }
+
+
