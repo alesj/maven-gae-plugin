@@ -25,7 +25,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author rhansen@kindleit.net
  * @goal run
  * @requiresDependencyResolution runtime
- * @execute phase="package"
+ * @phase integration-test
  */
 public class RunGoal extends StartGoal {
 

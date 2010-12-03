@@ -30,8 +30,10 @@ import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
  * Downloads and unzips the SDK to your maven repository. Use this goal, if you don't wish to
  * specify a <i>gae.home</i> or <i>-Dappegine.sdk.home property</i>. The plugin will now search for
  * the SDK in that default location.
- * 
+ *
  * @author rhansen@kindleit.net
+ * @phase initialize
+ * @requiresProject false
  * @goal unpack
  */
 public class UnpackGoal extends EngineGoalBase {
@@ -42,7 +44,7 @@ public class UnpackGoal extends EngineGoalBase {
 
   /**
    * Used to look up Artifacts in the remote repository.
-   * @component role="org.apache.maven.artifact.factory.ArtifactFactory" 
+   * @component role="org.apache.maven.artifact.factory.ArtifactFactory"
    * @required
    * @readonly
    */

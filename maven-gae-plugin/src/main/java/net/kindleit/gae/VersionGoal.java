@@ -21,7 +21,8 @@ import org.apache.maven.plugin.MojoFailureException;
  * Prints plugin and SDK version information.
  *
  * @author rhansen@kindleit.net
- *
+ * @threadSafe true
+ * @requiresProject false
  * @goal version
  */
 public class VersionGoal extends EngineGoalBase {

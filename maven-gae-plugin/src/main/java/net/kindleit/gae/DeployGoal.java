@@ -23,7 +23,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author rhansen@kindleit.net
  *
  * @goal deploy
- * @execute phase=package
+ * @phase deploy
  * @requiresOnline
  */
 public class DeployGoal extends EngineGoalBase {

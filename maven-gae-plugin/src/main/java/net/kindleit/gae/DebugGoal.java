@@ -29,7 +29,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author androns@gmail.com
  * @goal debug
  * @requiresDependencyResolution runtime
- * @execute phase="package"
+ * @phase test
  */
 public class DebugGoal extends StartGoal {
 
