@@ -34,13 +34,18 @@ import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
  * @author rhansen@kindleit.net
  * @phase initialize
  * @requiresProject false
+ * @requiresDependencyResolution runtime
  * @goal unpack
  */
 public class UnpackGoal extends EngineGoalBase {
 
+  private static final String APPENGINE_API_ARTIFACTID = "appengine-api-1.0-sdk";
+
+  private static final String APPENGINE_API_GROUPID = "com.google.appengine";
+
   private static final String SDK_ARTIFACT_ID = "appengine-java-sdk";
 
-  private static final String SDK_GROUPID = "com.google.appengine";
+  private static final String SDK_GROUPID = APPENGINE_API_GROUPID;
 
   /**
    * Used to look up Artifacts in the remote repository.
@@ -49,6 +54,13 @@ public class UnpackGoal extends EngineGoalBase {
    * @readonly
    */
   protected ArtifactFactory factory;
+
+  /**
+   * @parameter default-value="${plugin.artifacts}"
+   * Used to guess the unpackVersion if not supplied.
+   * @readonly
+   */
+  private List<Artifact> pluginArtifacts;
 
   /**
    * Used to look up Artifacts in the remote repository.
@@ -83,6 +95,8 @@ public class UnpackGoal extends EngineGoalBase {
 
   /**
    * Version of the plugin to unpack.
+   * Heuristics are taken now into account to guess the version from the list of
+   * pluginArtifacts.
    *
    * @parameter expression="${unpackVersion}" default-value="${gae.version}"
    * @required
@@ -91,6 +105,9 @@ public class UnpackGoal extends EngineGoalBase {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
     try {
+
+      unpackVersion = versionHeuristics();
+
       final Artifact sdkArtifact =
           factory.createArtifact(SDK_GROUPID, SDK_ARTIFACT_ID, unpackVersion,
               "", "zip");
@@ -114,6 +131,23 @@ public class UnpackGoal extends EngineGoalBase {
       getLog().error("can't extract the SDK archive", e);
     }
 
+  }
+
+  /** Attempts to guess the desired unpack version from the plugin's dependencies.
+   *
+   * @return the supplied unpackVersion or the version as specified by the appengine-api dependency.
+   */
+  private String versionHeuristics()
+  {
+    if (unpackVersion == null || unpackVersion.isEmpty()) {
+      for (Artifact pa : pluginArtifacts) {
+        if (APPENGINE_API_GROUPID.equals(pa.getGroupId())
+        && APPENGINE_API_ARTIFACTID.equals(pa.getArtifactId())) {
+          return pa.getVersion();
+        }
+      }
+    }
+    return unpackVersion;
   }
 
 }

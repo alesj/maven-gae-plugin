@@ -22,7 +22,7 @@ import org.apache.maven.plugin.MojoFailureException;
  *
  * @author rhansen@kindleit.net
  *
- * @goal deploy
+ * @goal update
  * @requiresOnline
  * @since 0.7.4
  */
