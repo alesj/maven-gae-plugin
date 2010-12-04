@@ -113,14 +113,19 @@ public class UnpackGoal extends EngineGoalBase {
               "", "zip");
       artifactResolver.resolve(sdkArtifact, remoteRepos, localRepo);
       final File sdkLocation = sdkArtifact.getFile().getParentFile();
+      final File sdkDestination = new File(sdkDir);
 
-      getLog().info("Extracting GAE SDK file: " + sdkArtifact.getFile().getAbsolutePath());
-      getLog().info("To path: " + sdkLocation.getAbsolutePath());
-
-      final UnArchiver unArchiver = archiverManager.getUnArchiver(sdkArtifact.getFile());
-      unArchiver.setSourceFile(sdkArtifact.getFile());
-      unArchiver.setDestDirectory(sdkLocation);
-      unArchiver.extract();
+      if (!sdkDestination.exists()) {
+          getLog().info("Extracting GAE SDK file: " + sdkArtifact.getFile().getAbsolutePath());
+          getLog().info("To path: " + sdkLocation.getAbsolutePath());
+    	  
+          final UnArchiver unArchiver = archiverManager.getUnArchiver(sdkArtifact.getFile());
+          unArchiver.setSourceFile(sdkArtifact.getFile());
+          unArchiver.setDestDirectory(sdkLocation);
+          unArchiver.extract();
+      } else {
+    	  getLog().info(String.format("Found %s %s.", sdkArtifact.getArtifactId(), sdkArtifact.getBaseVersion()));
+      }
     } catch (final ArtifactResolutionException e) {
       getLog().error("can't resolve parent pom", e);
     } catch (final ArtifactNotFoundException e) {
