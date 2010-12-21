@@ -9,19 +9,10 @@
   <version>${version}</version>
   <packaging>war</packaging>
 
-  <name>${name}</name>
-  <description>${description}</description>
+  <name>${gaeApplicationName}</name>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>maven-gae-plugin-repo</id>
-      <name>Maven Google App Engine Repository</name>
-      <url>http://maven-gae-plugin.googlecode.com/svn/repository/</url>
-    </pluginRepository>
-  </pluginRepositories>
-  
 	<dependencies>
-  
+
     <!-- JSF dependencies -->
     <dependency>
       <groupId>javax.faces</groupId>
@@ -43,7 +34,7 @@
       <artifactId>el-impl</artifactId>
       <version>1.1</version>
     </dependency>
-    
+
     <!-- GAE and JSF2 -->
     <dependency>
       <groupId>xalan</groupId>
@@ -65,7 +56,7 @@
       <artifactId>xml-apis</artifactId>
       <version>1.3.04</version>
     </dependency>
-    
+
 
     <!-- Google App Engine meta-package -->
     <dependency>

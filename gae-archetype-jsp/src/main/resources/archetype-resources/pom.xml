@@ -9,14 +9,8 @@
   <version>${version}</version>
   <packaging>war</packaging>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>maven-gae-plugin-repo</id>
-      <name>Maven Google App Engine Repository</name>
-      <url>http://maven-gae-plugin.googlecode.com/svn/repository/</url>
-    </pluginRepository>
-  </pluginRepositories>
-  
+  <name>${gaeApplicationName}</name>
+
 	<dependencies>
 
     <!-- Google App Engine meta-package -->
@@ -27,8 +21,8 @@
       <type>pom</type>
     </dependency>
 
-        <dependency>
-            <groupId>com.google.appengine.orm</groupId>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-core</artifactId>
             <version>${dollar}{datanucleus.version}</version>
             <scope>runtime</scope>

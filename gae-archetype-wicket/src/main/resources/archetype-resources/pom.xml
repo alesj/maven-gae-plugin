@@ -9,16 +9,7 @@
   <version>${version}</version>
   <packaging>war</packaging>
 
-  <name>${name}</name>
-  <description>${description}</description>
-  
-  <pluginRepositories>
-    <pluginRepository>
-      <id>maven-gae-plugin-repo</id>
-      <name>Maven Google App Engine Repository</name>
-      <url>http://maven-gae-plugin.googlecode.com/svn/repository/</url>
-    </pluginRepository>
-  </pluginRepositories>
+  <name>${gaeApplicationName}</name>
 
   <properties>
     <!--
@@ -69,7 +60,7 @@
       </properties>
     </profile>
   </profiles>
-  
+
   <build>
     <plugins>
       <!--
