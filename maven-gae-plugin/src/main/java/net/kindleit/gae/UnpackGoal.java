@@ -115,16 +115,16 @@ public class UnpackGoal extends EngineGoalBase {
       final File sdkLocation = sdkArtifact.getFile().getParentFile();
       final File sdkDestination = new File(sdkDir);
 
-      if (!sdkDestination.exists()) {
-          getLog().info("Extracting GAE SDK file: " + sdkArtifact.getFile().getAbsolutePath());
-          getLog().info("To path: " + sdkLocation.getAbsolutePath());
-    	  
-          final UnArchiver unArchiver = archiverManager.getUnArchiver(sdkArtifact.getFile());
-          unArchiver.setSourceFile(sdkArtifact.getFile());
-          unArchiver.setDestDirectory(sdkLocation);
-          unArchiver.extract();
+      if (sdkDestination.exists()) {
+        getLog().info(String.format("Found %s %s.", sdkArtifact.getArtifactId(), sdkArtifact.getBaseVersion()));
       } else {
-    	  getLog().info(String.format("Found %s %s.", sdkArtifact.getArtifactId(), sdkArtifact.getBaseVersion()));
+        getLog().info("Extracting GAE SDK file: " + sdkArtifact.getFile().getAbsolutePath());
+        getLog().info("To path: " + sdkLocation.getAbsolutePath());
+
+        final UnArchiver unArchiver = archiverManager.getUnArchiver(sdkArtifact.getFile());
+        unArchiver.setSourceFile(sdkArtifact.getFile());
+        unArchiver.setDestDirectory(sdkLocation);
+        unArchiver.extract();
       }
     } catch (final ArtifactResolutionException e) {
       getLog().error("can't resolve parent pom", e);
@@ -145,7 +145,7 @@ public class UnpackGoal extends EngineGoalBase {
   private String versionHeuristics()
   {
     if (unpackVersion == null || unpackVersion.isEmpty()) {
-      for (Artifact pa : pluginArtifacts) {
+      for (final Artifact pa : pluginArtifacts) {
         if (APPENGINE_API_GROUPID.equals(pa.getGroupId())
         && APPENGINE_API_ARTIFACTID.equals(pa.getArtifactId())) {
           return pa.getVersion();
