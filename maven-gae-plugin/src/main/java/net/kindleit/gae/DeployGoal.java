@@ -18,6 +18,7 @@ package net.kindleit.gae;
 /**
  * Extends the UpdateGoal incorporating it correctly into the default lifecycle
  *
+ * @see UpdateGoal
  * @author rhansen@kindleit.net
  *
  * @goal deploy

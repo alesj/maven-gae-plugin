@@ -14,25 +14,18 @@
  */
 package net.kindleit.gae;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * Displays times for the next several runs of each cron job
- * from Google's servers.
+ * Run goal unbound to any phase. This goal is similar to run, except that it
+ * does not require the package phase to have completed.
+ *
+ * @see RunGoal
  *
  * @author rhansen@kindleit.net
- *
- * @goal cron-info
- * @requiresOnline
- * @since 0.7.1
- *
+ * @goal execute
+ * @requiresDependencyResolution runtime
+ * @since 0.8.1
  */
-public class CronInfoGoal extends EngineGoalBase {
-
-  public void execute() throws MojoExecutionException, MojoFailureException {
-    getLog().info("Getting cron info...");
-    runAppCfg("cron_info");
-  }
+public class ExecuteGoal extends RunGoal {
 
 }

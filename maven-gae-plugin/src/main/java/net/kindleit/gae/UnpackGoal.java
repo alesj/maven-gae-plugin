@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Kindleit.net Software Development Licensed under the Apache
+ * Copyright 2011 Kindleit.net Software Development Licensed under the Apache
  * License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
@@ -33,6 +33,7 @@ import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
  *
  * @author rhansen@kindleit.net
  * @phase initialize
+ * @execute phase="initialize"
  * @requiresProject false
  * @requiresDependencyResolution runtime
  * @goal unpack

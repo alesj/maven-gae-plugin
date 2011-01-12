@@ -1,4 +1,4 @@
-/* Copyright 2009 Kindleit.net Software Development
+/* Copyright 2011 Kindleit.net Software Development
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,10 @@ import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * Rolls back an update on the Google's servers.
- * 
+ *
  * @author jpeynado@kindleit.net
  * @goal rollback
  */
-
-
 public class RollbackGoal extends EngineGoalBase {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
@@ -32,5 +30,3 @@ public class RollbackGoal extends EngineGoalBase {
     runAppCfg("rollback", appDir);
   }
 }
-
-

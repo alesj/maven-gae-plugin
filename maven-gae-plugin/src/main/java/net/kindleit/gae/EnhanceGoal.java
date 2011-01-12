@@ -1,4 +1,4 @@
-/* Copyright 2009 Kindleit.net Software Development
+/* Copyright 2011 Kindleit.net Software Development
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,13 @@ import org.apache.tools.ant.types.selectors.NotSelector;
 
 import com.google.appengine.tools.enhancer.EnhancerTask;
 
-/** 
+/**
  * Enhances classes.
  *
  * @author rhansen@kindleit.net
  *
  * @goal enhance
+ * @phase compile
  */
 public class EnhanceGoal extends EngineGoalBase {
 
