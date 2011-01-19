@@ -5,7 +5,7 @@
   <parent>
     <artifactId>maven-gae-parent</artifactId>
     <groupId>net.kindleit</groupId>
-    <version>0.8.1-SNAPSHOT</version>
+    <version>0.8.1</version>
     <relativePath>..</relativePath>
   </parent>
   
