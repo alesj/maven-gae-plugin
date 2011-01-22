@@ -23,6 +23,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * @author rhansen@kindleit.net
  *
  * @goal update
+ * @execute phase="package"
  * @requiresOnline
  * @since 0.7.4
  */
