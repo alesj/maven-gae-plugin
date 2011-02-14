@@ -95,4 +95,27 @@
     -->
   </dependencies>
 
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changelog-plugin</artifactId>
+        <version>2.2</version>
+        <reportSets>
+          <reportSet>
+            <id>dual-report</id>
+            <configuration>
+              <type>range</type>
+              <range>30</range>
+            </configuration>
+            <reports>
+              <report>changelog</report>
+              <report>dev-activity</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
+
 </project>
