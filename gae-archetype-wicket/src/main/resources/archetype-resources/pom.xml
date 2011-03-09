@@ -12,6 +12,10 @@
   <name>${gaeApplicationName}</name>
 
   <properties>
+    <!-- Sets the project's default encoding. 
+         http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    
     <!--
       Specify AppEngine version for your project. It should match SDK version pointed to
       by ${dollar}{gae.home} property (Typically, one used by your Eclipse plug-in)

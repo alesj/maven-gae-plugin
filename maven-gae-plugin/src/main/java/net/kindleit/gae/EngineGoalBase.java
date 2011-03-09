@@ -76,6 +76,14 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
    */
   protected Settings settings;
 
+  /** The character encoding scheme to be applied interacting with the SDK.
+   * Sent as the --compile_encoding flag.
+   *
+   * @parameter expression="${encoding}" default-value="${project.build.sourceEncoding}"
+   * @since 0.8.3
+   */
+  protected String encoding;
+
   /** Overrides where the Project War Directory is located.
    *
    * @parameter expression="${project.build.directory}/${project.build.finalName}"
@@ -166,7 +174,6 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
 
   protected Properties gaeProperties;
 
-
   public EngineGoalBase() {
     gaeProperties = new Properties();
     try {
@@ -177,7 +184,7 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
   }
 
 
-  public void contextualize(Context context) throws ContextException {
+  public void contextualize(final Context context) throws ContextException {
       this.container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);
   }
 
@@ -270,9 +277,10 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
   }
 
   protected final List<String> getCommonArgs() {
-    final List<String> args = new ArrayList<String>(8);
+    final List<String> args = new ArrayList<String>(9);
 
     args.add("--sdk_root=" + sdkDir);
+    args.add("--compile_encoding=" + encoding);
     addStringOption(args, "--server=", uploadServer);
 
     return args;
@@ -332,7 +340,7 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
     }
   }
 
-  private String decryptPassword(String password) {
+  private String decryptPassword(final String password) {
     if (password != null) {
       try {
         final Class<?> securityDispatcherClass = container.getClass()
@@ -344,7 +352,7 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
 
         return (String) decrypt.invoke(securityDispatcher, password);
 
-      } catch (Exception e) {
+      } catch (final Exception e) {
         getLog().warn("security features are disabled. Cannot find plexus security dispatcher", e);
       }
     }

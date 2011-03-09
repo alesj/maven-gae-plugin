@@ -27,7 +27,7 @@
             <version>${dollar}{datanucleus.version}</version>
             <scope>runtime</scope>
         </dependency>
-    
+
 		<dependency>
 			<groupId>javax.transaction</groupId>
 			<artifactId>jta</artifactId>
@@ -101,7 +101,7 @@
 			<version>${dollar}{gae.version}</version>
 			<scope>test</scope>
 		</dependency>
-        
+
         <dependency>
             <groupId>javax.jdo</groupId>
             <artifactId>jdo2-api</artifactId>
@@ -234,6 +234,11 @@
 
 	<!-- Specify hard-coded project properties here -->
 	<properties>
+
+	  <!-- Sets the project's default encoding.
+         http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
 		<!--
 			This is just for "eclipse:eclipse" goal to always attempt downloading
 			sources
