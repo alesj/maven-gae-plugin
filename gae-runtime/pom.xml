@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>gae-runtime</artifactId>
-  <version>1.4.3-SNAPSHOT</version>
+  <version>1.4.3</version>
   <packaging>pom</packaging>
 
   <name>Google App Engine Runtime Dependencies</name>
@@ -75,4 +75,10 @@
     </dependency>
 
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:http://maven-gae-plugin.googlecode.com/svn/tags/1.4.3</connection>
+    <developerConnection>scm:svn:https://maven-gae-plugin.googlecode.com/svn/tags/1.4.3</developerConnection>
+    <url>http://code.google.com/p/maven-gae-plugin/source/browse/tags/1.4.3</url>
+  </scm>
 </project>
