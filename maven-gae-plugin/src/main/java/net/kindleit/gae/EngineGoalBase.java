@@ -265,6 +265,7 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
 
     addEmailOption(args);
     addStringOption(args, "--host=", hostString);
+    addStringOption(args, "--compile_encoding=", encoding);
     addProxyOption(args);
     addBooleanOption(args, "--passin", passIn);
     if (!passIn) {
@@ -280,7 +281,6 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
     final List<String> args = new ArrayList<String>(9);
 
     args.add("--sdk_root=" + sdkDir);
-    args.add("--compile_encoding=" + encoding);
     addStringOption(args, "--server=", uploadServer);
 
     return args;
