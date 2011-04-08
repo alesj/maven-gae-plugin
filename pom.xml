@@ -32,7 +32,6 @@
     </site>
   </distributionManagement>
 
-
   <organization>
     <name>KindleIT</name>
     <url>http://www.kindleit.net</url>
@@ -78,6 +77,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.plugin.version>2.2.1</maven.plugin.version>
     <junit.version>3.8.2</junit.version>
     <gae.version>1.4.3</gae.version>
