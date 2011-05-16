@@ -22,7 +22,7 @@
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-api-1.0-sdk</artifactId>
-      <version>1.4.3</version>
+      <version>1.5.0</version>
     </dependency>
 
     <!-- Google App Engine Runtime Dependencies -->
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-tools-sdk</artifactId>
-      <version>1.4.3</version>
+      <version>1.5.0</version>
     </dependency>
 
   </dependencies>
