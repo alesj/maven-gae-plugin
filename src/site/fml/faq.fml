@@ -21,6 +21,35 @@
         <p>More clearly: You can now simply change the version of gae-runtime</p> 
       </answer>
     </faq>
+    <faq id="custom-gae-runtime">
+      <question>How do I use an 'unsupported' version of the runtime? </question>
+      <answer>
+        <p>It's simple: In your project's pom, instead of depending on gae-runtime, you can directly depend on the app-engine libraries:</p> 
+        <source><![CDATA[<plugin>
+  <groupId>net.kindleit</groupId>
+  <artifactId>maven-gae-plugin</artifactId>
+  <version>${maven.gae.plugin.version}</version>
+  <dependencies>
+    <dependency>
+      <groupId>net.kindleit</groupId>
+      <artifactId>gae-runtime</artifactId>
+      <version>SOME_OLD_VERSION</version>
+      <type>pom</type>
+    </dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-tools-sdk</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-1.0-sdk</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+  </dependencies>
+</plugin>]]></source>
+      </answer>
+    </faq>
     <faq id="eclipse">
       <question>How to use Maven GAE Plugin with Google Eclipse Plugin?</question>
       <answer>
@@ -38,7 +67,7 @@
       <answer>
         <p>The Java development server does not support sendmail like the Python development server.</p> 
         <p>However, you can update the configuration settings so e-mails are logged:</p>
-        <source><plugin>
+        <source><![CDATA[<plugin>
   <groupId>net.kindleit</groupId>
   <artifactId>maven-gae-plugin</artifactId>
   <version>${maven.gae.plugin.version}</version>
@@ -58,7 +87,7 @@
       <type>pom</type>
     </dependency>
   </dependencies>
-</plugin></source>
+</plugin>]]></source>
       </answer>
     </faq>
   </part>
