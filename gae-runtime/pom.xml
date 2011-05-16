@@ -5,12 +5,12 @@
   <parent>
     <artifactId>maven-gae-parent</artifactId>
     <groupId>net.kindleit</groupId>
-    <version>0.8.2</version>
+    <version>0.8.4</version>
     <relativePath>..</relativePath>
   </parent>
 
   <artifactId>gae-runtime</artifactId>
-  <version>1.5.1-SNAPSHOT</version>
+  <version>1.5.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Google App Engine Runtime Dependencies</name>
