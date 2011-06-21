@@ -20,8 +20,6 @@ import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import com.google.appengine.tools.admin.AppCfg;
-
 /**
  * Retrieves logs from Google's servers.
  *
@@ -51,18 +49,19 @@ public class LogsGoal extends EngineGoalBase {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
     getLog().info("Getting application logs...");
-
+    runAppCfg("request_logs", appDir, outputFile.toString());
+  }
+  
+  @Override
+  protected List<String> getAppCfgArgs() {
     final List<String> args = getCommonArgs();
+    
     args.add("--num_days=" + days);
     if (severity != null) {
       args.add("--severity=" + severity);
     }
-    args.add("request_logs");
-    args.add(appDir);
-    args.add(outputFile.toString());
-
-    assureSystemProperties();
-    AppCfg.main(args.toArray(ARG_TYPE));
+    
+    return args;
   }
 
 }

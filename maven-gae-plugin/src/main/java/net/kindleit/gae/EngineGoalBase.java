@@ -17,15 +17,7 @@
  */
 package net.kindleit.gae;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -260,7 +252,7 @@ public abstract class EngineGoalBase extends AbstractMojo implements Contextuali
    *
    * @return List of arguments to add.
    */
-  protected final List<String> getAppCfgArgs () {
+  protected List<String> getAppCfgArgs () {
     final List<String> args = getCommonArgs();
 
     addEmailOption(args);
