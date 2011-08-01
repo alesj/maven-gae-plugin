@@ -80,7 +80,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.plugin.version>2.2.1</maven.plugin.version>
     <junit.version>3.8.2</junit.version>
-    <gae.version>1.5.1</gae.version>
+    <gae.version>1.5.2</gae.version>
     <ant.version>1.7.1</ant.version>
     <gae.base>
       ${settings.localRepository}/com/google/appengine/appengine-java-sdk/${gae.version}

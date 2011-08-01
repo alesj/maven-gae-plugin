@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Maven GAE Plugin">
+<project xmlns="http://maven.apache.org/DECORATION/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.1.0 http://maven.apache.org/xsd/decoration-1.1.0.xsd" name="Maven GAE Plugin">
   <bannerRight>
     <name>Maven GAE Plugin</name>
     <src>images/maven-gae-plugin-logo-small.png</src>
@@ -11,6 +12,11 @@
     <logo name="Development Accelerated By JRebel" href="http://www.zeroturnaround.com/javarebel/"
           img="images/zero-turnaround-logo.gif" />
   </poweredBy>
+  <skin>
+    <groupId>com.kindleit.skins</groupId>
+    <artifactId>default</artifactId>
+    <version>1.0</version>
+  </skin>
   <body>
     <links>
       <item name="Google App Engine" href="http://code.google.com/appengine"/>
