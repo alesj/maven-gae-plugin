@@ -32,7 +32,7 @@ public class CronInfoGoal extends EngineGoalBase {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
     getLog().info("Getting cron info...");
-    runAppCfg("cron_info");
+    runAppCfg("cron_info", appDir);
   }
 
 }
