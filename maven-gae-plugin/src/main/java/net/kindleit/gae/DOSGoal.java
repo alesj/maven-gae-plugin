@@ -18,21 +18,20 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * Updates datastore cron tasks.
+ * Updates Denial of Services blacklists.
  *
  * @author rhansen@kitsd.com
  *
- * @goal update-cron
+ * @goal update-dos
  * @executionStrategy once-per-session
  * @requiresOnline
- * @since 0.8.1
  *
  */
-public class CronGoal extends EngineGoalBase {
+public class DOSGoal extends EngineGoalBase {
 
   public void execute() throws MojoExecutionException, MojoFailureException {
-    getLog().info("Updating Project Cron...");
-    runAppCfg("update_cron", appDir);
+    getLog().info("Updating Project DoS Protection Service...");
+    runAppCfg("update_dos", appDir);
   }
 }
 

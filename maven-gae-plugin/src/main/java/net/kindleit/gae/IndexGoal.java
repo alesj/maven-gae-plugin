@@ -1,4 +1,4 @@
-/* Copyright 2009 Kindleit.net Software Development
+/* Copyright 2009-2011 Kindleit.net Software Development
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * Updates datastore indexes.
  *
  * @author jpeynado@kindleit.net
+ * @author rhansen@kitsd.com
  *
  * @goal update-indexes
  * @executionStrategy once-per-session
