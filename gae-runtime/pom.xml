@@ -5,12 +5,12 @@
   <parent>
     <artifactId>maven-gae-parent</artifactId>
     <groupId>net.kindleit</groupId>
-    <version>0.8.4</version>
+    <version>0.9.1</version>
     <relativePath>..</relativePath>
   </parent>
 
   <artifactId>gae-runtime</artifactId>
-  <version>1.5.3</version>
+  <version>1.5.4</version>
   <packaging>pom</packaging>
 
   <name>Google App Engine Runtime Dependencies</name>
@@ -22,7 +22,7 @@
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-api-1.0-sdk</artifactId>
-      <version>1.5.3</version>
+      <version>1.5.4</version>
     </dependency>
 
     <!-- Google App Engine Runtime Dependencies -->
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-tools-sdk</artifactId>
-      <version>1.5.3</version>
+      <version>1.5.4</version>
     </dependency>
 
   </dependencies>
